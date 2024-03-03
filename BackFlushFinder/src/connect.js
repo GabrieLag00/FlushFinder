@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize';
 // Configuración de la conexión a la base de datos usando Sequelize
 const sequelize = new Sequelize('banointeligente', 'root', '', {
     host: 'localhost',
-    port: 3310,
+    port: 3306,
     dialect: 'mysql', // Especifica el dialecto de la base de datos
     logging: false, // Desactiva el logging; activa según sea necesario para depuración
     pool: { // Configuración opcional del pool de conexiones

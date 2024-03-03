@@ -11,7 +11,11 @@ const Conserje = sequelize.define('Conserje', {
   Nombre: {
     type: DataTypes.STRING(100),
     allowNull: false
-  }
+  },
+   Matricula: {
+    type: DataTypes.INTEGER(10),
+    allowNull: false
+   }
 }, {
   tableName: 'conserjes',
   timestamps: false

@@ -1,14 +1,16 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import { obtenerEdificios } from '../controllers/edificiosControllers.js';
+import { obtenerConserjes } from '../controllers/conserjesController.js';
+import { obtenerBano } from '../controllers/banosController.js';
 
 
-
-// Crear el router de Express
 const router = Router();
 
-// Ruta de registro
-router.get('/getEdificios', obtenerEdificios);
+
+router.get('/edificios', obtenerEdificios); // Ruta edificios
+router.get('/conserjes', obtenerConserjes); // Ruta conserjes
+router.get('/edificios/:edificioId/banos/:banoId', obtenerBano); //Ruta banos por id 
 
 
-// Exportar el router
 export default router;
+

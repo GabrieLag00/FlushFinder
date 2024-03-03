@@ -14,6 +14,10 @@ module.exports = {
       Nombre: {
         type: Sequelize.STRING(100),
         allowNull: false
+      },
+      Matricula: {
+        type: Sequelize.INTEGER(10),
+        allowNull: false
       }
     });
   },

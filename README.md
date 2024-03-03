@@ -93,7 +93,10 @@ Para instalar FlushFinder, sigue estos pasos:
    ```
    npx sequelize-cli db:migrate:undo:all
    ```
-
+   Crear un seeder(ASEGURASE QUE SEA "cjs" NO "js"):
+   ```
+   npx sequelize-cli seed:generate --name demo-[nombre]
+   ```
    Tambien los mismo aplica para los datos (seeders):
    ```
    npx sequelize-cli db:seed:all
