@@ -6,18 +6,20 @@ import RegisterScreen from './Screens/RegisterScreen';
 import GenderScreen from './Screens/GenderScreen';
 import UbicationScreen from './Screens/UbicationScreen';
 import ToiletsScreen from './Screens/ToiletsScreen';
+import ApiScreen from './Screens/ApiScreen'
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Login"/*"Api"*/>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Gender" component={GenderScreen} />
         <Stack.Screen name="Ubication" component={UbicationScreen} />
         <Stack.Screen name="Toilets" component={ToiletsScreen} />
+        <Stack.Screen name="Api" component={ApiScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

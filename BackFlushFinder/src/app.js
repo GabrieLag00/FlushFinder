@@ -3,7 +3,7 @@ import express from 'express';
 import morgan from 'morgan';
 import usersRoutes from './routes/usersRoutes.js'; // Asegúrate de ajustar la ruta de importación según tu estructura de directorios
 import appRoutes from './routes/appRoutes.js';
-
+import cors from 'cors'
 
 
 
@@ -11,7 +11,7 @@ const app = express();
 
 // Middleware para parsear el cuerpo de las solicitudes
 app.use(express.json());
-
+app.use(cors());
 // Middleware para logging
 app.use(morgan('dev'));
 

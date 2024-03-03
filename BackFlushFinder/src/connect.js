@@ -1,20 +1,27 @@
 import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
 
-// Configuración de la conexión a la base de datos usando Sequelize
-const sequelize = new Sequelize('banointeligente', 'root', '', {
-    host: 'localhost',
-    port: 3306,
-    dialect: 'mysql', // Especifica el dialecto de la base de datos
-    logging: false, // Desactiva el logging; activa según sea necesario para depuración
-    pool: { // Configuración opcional del pool de conexiones
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
+// Carga las variables de entorno desde el archivo .env
+dotenv.config();
+
+const sequelize = new Sequelize(
+    process.env.DB_DATABASE, // Nombre de la base de datos
+    process.env.DB_USERNAME, // Usuario
+    process.env.DB_PASSWORD, // Contraseña
+    {
+        host: process.env.DB_HOST, // Host de la base de datos
+        port: process.env.DB_PORT, // Puerto
+        dialect: 'mysql', // Especifica el dialecto de la base de datos
+        logging: false, // Desactiva el logging
+        pool: {
+            max: 5,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
+        }
     }
-});
+);
 
-// Función asíncrona para probar la conexión a la base de datos
 const connectDB = async () => {
     try {
         await sequelize.authenticate();
@@ -24,5 +31,5 @@ const connectDB = async () => {
     }
 };
 
-export default sequelize; // Exporta la instancia de Sequelize para usarla en modelos
-export { connectDB }; // Exporta la función para conectar y verificar la conexión a la DB
+export default sequelize;
+export { connectDB };
