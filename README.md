@@ -88,7 +88,23 @@ Para instalar FlushFinder, sigue estos pasos:
    npx sequelize-cli db:migrate
    ```
 
-6. Inicia el servidor (del lado del backend):
+   En caso de que hay alguna cambio en migraciones , o se agreguen cosas, ejecuta este comando para borrar
+   y vuelve ejecutar la migracion:
+   ```
+   npx sequelize-cli db:migrate:undo:all
+   ```
+
+   Tambien los mismo aplica para los datos (seeders):
+   ```
+   npx sequelize-cli db:seed:all
+   ```
+   En caso de que haya algun cambio en los seeders:
+   ```
+   npx sequelize-cli db:seed:undo:all
+
+   ```
+
+7. Inicia el servidor (del lado del backend):
    ```
    cd BackFlushFinder
    
