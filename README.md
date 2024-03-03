@@ -119,5 +119,7 @@ Compatibilidad de Módulos CommonJS y ESM
 Este proyecto está configurado para utilizar ECMAScript Modules (ESM), la última versión del estándar JavaScript para importar y exportar módulos. Sin embargo, algunas herramientas o dependencias pueden esperar módulos en el formato CommonJS, lo que podría ocasionar incompatibilidades.
 
 Miardair Infiel
-Puto emi
+Papa emi
 Puto Canche
+
+Me gusta comerela a burros att:gabo
