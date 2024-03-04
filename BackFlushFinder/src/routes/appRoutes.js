@@ -7,7 +7,7 @@ import { obtenerBano } from '../controllers/banosController.js';
 const router = Router();
 
 
-router.get('/edificios', obtenerEdificios); // Ruta edificios
+router.get('/edificios', obtenerEdificios); // Ruta edificios 
 router.get('/conserjes', obtenerConserjes); // Ruta conserjes
 router.get('/edificios/:edificioId/banos/:banoId', obtenerBano); //Ruta banos por id 
 
