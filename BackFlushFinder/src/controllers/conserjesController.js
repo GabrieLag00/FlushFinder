@@ -1,7 +1,7 @@
 // controllers/conserjesControllers.js
 import jwt from 'jsonwebtoken';
-import { LoginConserjeSchema } from '../schemas/conserjesSchemas';
-import Conserje from '../models/conserje';
+import { LoginConserjeSchema } from '../schemas/conserjesSchemas.js';
+import Conserje from '../models/conserje.js';
 import { z } from 'zod';
 
 export const loginConserje = async (req, res) => {
