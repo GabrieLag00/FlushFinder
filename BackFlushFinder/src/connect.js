@@ -7,7 +7,7 @@ dotenv.config();
 const sequelize = new Sequelize(
     process.env.DB_DATABASE, // Nombre de la base de datos
     process.env.DB_USERNAME, // Usuario
-    process.env.DB_PASSWORD, // Contraseña
+    process.env.DB_PASSWORD, 
     {
         host: process.env.DB_HOST, // Host de la base de datos
         port: process.env.DB_PORT, // Puerto

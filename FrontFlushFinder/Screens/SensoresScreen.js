@@ -22,6 +22,7 @@ const DistanceTableScreen = () => {
     };
   }, []);
   
+   
 
   return (
     <View style={styles.container}>

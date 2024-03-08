@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-const API_URL_EDIFICIOS = 'http://10.10.50.76:4000/api/edificios/edificios';
-const API_URL_CONSERJES = 'http://10.10.50.76:4000/api/conserjes/conserjes';
+const API_URL_EDIFICIOS = 'http://10.10.58.38:4000/api/edificios/edificios';
+const API_URL_CONSERJES = 'http://10.10.58.38:4000/api/conserjes/conserjes';
+const API_URL_REGISTRO = 'http://10.10.58.38:4000/api/users/register';
+const API_URL_LOGIN = 'http://10.10.58.38:4000/api/users/login';
 
 export const getEdificios = async () => {
   try {
@@ -24,3 +26,27 @@ export const getConserjes = async () => {
 };
 
 
+// Función para registrar un usuario
+export const registrarUsuario = async (datosUsuario) => {
+  try {
+    const response = await axios.post(API_URL_REGISTRO, datosUsuario);
+    // Retorna la respuesta del servidor, podría incluir datos del usuario, un mensaje de éxito, etc.
+    return response.data;
+  } catch (error) {
+    console.error("Error al registrar usuario: ", error);
+    throw error;
+  }
+};
+
+
+// Función para iniciar sesión de un usuario
+export const loginUsuario = async (credenciales) => {
+  try {
+    const response = await axios.post(API_URL_LOGIN, credenciales);
+    // Retorna la respuesta del servidor, probablemente incluirá el token de autenticación
+    return response.data;
+  } catch (error) {
+    console.error("Error al iniciar sesión: ", error);
+    throw error;
+  }
+};
