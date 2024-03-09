@@ -1,8 +1,59 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 /*import fontSizes from '../styles/ClassStyle';*/
+import { loginUsuario } from '../api';
+import {z} from 'zod';
+
+const LoginSchema = z.object({
+  email: z.string()
+    .email({ message: "Correo electrónico no válido" })
+    .max(255, { message: "El correo electrónico no debe exceder los 255 caracteres" }),
+  contrasena: z.string()
+    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" })
+    .max(50, { message: "La contraseña no debe exceder los 50 caracteres" }),
+});
+
+
+
 
 function LoginScreen({ navigation }) {
+
+  const [email, setEmail] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  const [errors, setErrors] = useState({});
+
+
+
+  const handleLogin = async () => {
+    try {
+      // Validar los datos de entrada con Zod
+      LoginSchema.parse({ email, contrasena });
+
+      // Intentar iniciar sesión a través de la API
+      const response = await loginUsuario({ email, contrasena });
+
+      // Si el inicio de sesión es exitoso, proceder según la lógica de tu app
+      // Por ejemplo: navigation.navigate('Home');
+      Alert.alert("Inicio de sesión exitoso", "Bienvenido a la aplicación.");
+
+      // Limpia los errores, si los hubiera
+      setErrors({});
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Actualizar el estado de errores con los mensajes de Zod
+        const newErrors = error.errors.reduce((acc, curr) => {
+          acc[curr.path[0]] = curr.message;
+          return acc;
+        }, {});
+        setErrors(newErrors);
+      } else {
+        console.error("Error durante el inicio de sesión: ", error);
+        Alert.alert("Error en el inicio de sesión", "No se pudo iniciar sesión. Inténtalo de nuevo.");
+      }
+    }
+  };
+
+
   return (
     <View style={stylesLogin.container}>
       <Text style={stylesLogin.title}>Inicia sesión</Text>
@@ -12,15 +63,21 @@ function LoginScreen({ navigation }) {
         keyboardType="email-address"
         autoCapitalize="none"
         placeholderTextColor="#FEFEFE"
+        value={email}
+        onChangeText={setEmail}
       />
+      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
       <TextInput
         style={stylesLogin.input}
         placeholder="Contraseña"
         secureTextEntry
         placeholderTextColor="#FEFEFE"
+        value={contrasena}
+        onChangeText={setContrasena}
       />
+      {errors.contrasena && <Text style={styles.errorText}>{errors.contrasena}</Text>}
       <View style={stylesLogin.buttonContainer}>
-        <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('Gender')}>
+        <TouchableOpacity style={stylesLogin.button} onPress={handleLogin}>
           <Text style={stylesLogin.buttonText}>Iniciar sesión</Text>
         </TouchableOpacity>
       </View>
@@ -38,6 +95,12 @@ function LoginScreen({ navigation }) {
 }
 
 export const stylesLogin = StyleSheet.create({
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginLeft: 20,
+    marginTop: 5,
+  },
   container: {
     flex: 1,
     backgroundColor: '#3451C6',
