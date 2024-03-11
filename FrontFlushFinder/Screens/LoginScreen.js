@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 /*import fontSizes from '../styles/ClassStyle';*/
 import { loginUsuario } from '../api';
 import {z} from 'zod';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginSchema = z.object({
   email: z.string()
@@ -23,36 +24,35 @@ function LoginScreen({ navigation }) {
   const [errors, setErrors] = useState({});
 
 
-
   const handleLogin = async () => {
     try {
-      // Validar los datos de entrada con Zod
+      // Validación de los datos ingresados
       LoginSchema.parse({ email, contrasena });
 
-      // Intentar iniciar sesión a través de la API
       const response = await loginUsuario({ email, contrasena });
 
-      // Si el inicio de sesión es exitoso, proceder según la lógica de tu app
-      // Por ejemplo: navigation.navigate('Home');
-      Alert.alert("Inicio de sesión exitoso", "Bienvenido a la aplicación.");
+      if (response.token) {
+        // Guardar el token y el estado de sesión en AsyncStorage
+        await AsyncStorage.setItem('userToken', response.token);
+        await AsyncStorage.setItem('isLoggedIn', 'true');
 
-      // Limpia los errores, si los hubiera
-      setErrors({});
+        // Redirigir a la pantalla "Ubication"
+        navigation.navigate('Ubication');
+      } else {
+        Alert.alert("Inicio de sesión fallido", "Verifica tus credenciales.");
+      }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        // Actualizar el estado de errores con los mensajes de Zod
-        const newErrors = error.errors.reduce((acc, curr) => {
+        const formErrors = error.errors.reduce((acc, curr) => {
           acc[curr.path[0]] = curr.message;
           return acc;
         }, {});
-        setErrors(newErrors);
+        setErrors(formErrors);
       } else {
-        console.error("Error durante el inicio de sesión: ", error);
         Alert.alert("Error en el inicio de sesión", "No se pudo iniciar sesión. Inténtalo de nuevo.");
       }
     }
   };
-
 
   return (
     <View style={stylesLogin.container}>
