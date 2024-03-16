@@ -1,20 +1,20 @@
+// socketServer.js
 import { Server as WebsocketServer } from 'socket.io';
 
-export function startSocketServer(httpServer, port) {
+export function startSocketServer(httpServer) {
   const io = new WebsocketServer(httpServer, {
     cors: {
-      origin: '*',
+      origin: '*', // Asegúrate de restringir esto en producción por seguridad
     },
   });
 
   io.on('connection', (socket) => {
     console.log('Un cliente se ha conectado.');
 
-    // Aquí puedes añadir lógica adicional para manejar eventos de Socket.IO
+    // Simular datos enviados desde el servidor, por ejemplo, cada 4 segundos
+
+    // Aquí puedes añadir más lógica para manejar eventos de Socket.IO
   });
 
-  console.log(`Servidor Socket.IO iniciado en el puerto ${port}`);
-
-  return io;
+  console.log(`Servidor Socket.IO iniciado en el mismo puerto que el HTTP`);
 }
-
