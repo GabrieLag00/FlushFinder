@@ -78,8 +78,8 @@ function Banos({ navigation }) {
                                 <Image source={require('../images/jabon.png')} style={stylesToilets.bathImage} />
                                 <Text style={stylesToilets.bathStatusText}>62%</Text>
                             </View>
-                            <TouchableOpacity style={stylesToilets.buttonBath}>
-                                <Text style={stylesToilets.buttonBathText}>SOS</Text>
+                            <TouchableOpacity style={stylesToilets.buttonBath} onPress={() => navigation.navigate('Sos')}>
+                                <Text style={stylesToilets.buttonBathText}>Reportar</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
                                 <Text style={stylesToilets.closeButton}>Cerrar</Text>
@@ -95,7 +95,7 @@ function Banos({ navigation }) {
 
 export default Banos;
 
-const stylesToilets = StyleSheet.create({
+export const stylesToilets = StyleSheet.create({
     textContainer: {
         fontSize: 45,
         paddingVertical: 30,
