@@ -1,8 +1,59 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 /*import fontSizes from '../styles/ClassStyle';*/
+import { loginUsuario } from '../api';
+import {z} from 'zod';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const LoginSchema = z.object({
+  email: z.string()
+    .email({ message: "Correo electrónico no válido" })
+    .max(255, { message: "El correo electrónico no debe exceder los 255 caracteres" }),
+  contrasena: z.string()
+    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" })
+    .max(50, { message: "La contraseña no debe exceder los 50 caracteres" }),
+});
+
+
+
 
 function LoginScreen({ navigation }) {
+
+  const [email, setEmail] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  const [errors, setErrors] = useState({});
+
+
+  const handleLogin = async () => {
+    try {
+      // Validación de los datos ingresados
+      LoginSchema.parse({ email, contrasena });
+
+      const response = await loginUsuario({ email, contrasena });
+
+      if (response.token) {
+        // Guardar el token y el estado de sesión en AsyncStorage
+        await AsyncStorage.setItem('userToken', response.token);
+        await AsyncStorage.setItem('isLoggedIn', 'true');
+
+        // Redirigir a la pantalla "Ubication"
+        navigation.navigate('Ubication');
+      } else {
+        Alert.alert("Inicio de sesión fallido", "Verifica tus credenciales.");
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const formErrors = error.errors.reduce((acc, curr) => {
+          acc[curr.path[0]] = curr.message;
+          return acc;
+        }, {});
+        setErrors(formErrors);
+      } else {
+        Alert.alert("Error en el inicio de sesión", "No se pudo iniciar sesión. Inténtalo de nuevo.");
+      }
+    }
+  };
+
   return (
     <View style={stylesLogin.container}>
       <Text style={stylesLogin.title}>Inicia sesión</Text>
@@ -12,15 +63,21 @@ function LoginScreen({ navigation }) {
         keyboardType="email-address"
         autoCapitalize="none"
         placeholderTextColor="#FEFEFE"
+        value={email}
+        onChangeText={setEmail}
       />
+      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
       <TextInput
         style={stylesLogin.input}
         placeholder="Contraseña"
         secureTextEntry
         placeholderTextColor="#FEFEFE"
+        value={contrasena}
+        onChangeText={setContrasena}
       />
+      {errors.contrasena && <Text style={styles.errorText}>{errors.contrasena}</Text>}
       <View style={stylesLogin.buttonContainer}>
-        <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('Gender')}>
+        <TouchableOpacity style={stylesLogin.button} onPress={handleLogin}>
           <Text style={stylesLogin.buttonText}>Iniciar sesión</Text>
         </TouchableOpacity>
       </View>
@@ -38,6 +95,12 @@ function LoginScreen({ navigation }) {
 }
 
 export const stylesLogin = StyleSheet.create({
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginLeft: 20,
+    marginTop: 5,
+  },
   container: {
     flex: 1,
     backgroundColor: '#3451C6',

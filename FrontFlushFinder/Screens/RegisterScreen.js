@@ -45,7 +45,7 @@ function RegisterScreen({ navigation }) {
     try {
       RegistroSchema.parse(formData); // Intenta validar los datos con Zod
       setErrors({}); // Limpia los errores si la validación es exitosa
-      navigation.navigate('GenderSelection', { nombre, email, contrasena }); // Navega a la próxima pantalla
+      navigation.navigate('Gender', { nombre, email, contrasena }); // Navega a la próxima pantalla
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors = error.errors.reduce((acc, curr) => {
