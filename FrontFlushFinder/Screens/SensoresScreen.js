@@ -1,66 +1,77 @@
+// SensoresScreen
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import io from 'socket.io-client';
+import { LineChart } from 'react-native-chart-kit';
 
-const SOCKET_SERVER_URL = 'http://localhost:8765';
+const socket = io('http://localhost:8655');
 
-const DistanceTableScreen = () => {
-  const [distanceData, setDistanceData] = useState([]);
+const SensoresScreen = () => {
+  const [dataPoints, setDataPoints] = useState([]);
+  const [labels, setLabels] = useState([]);
 
-  useEffect((distanceData) => {
-    const socket = io(SOCKET_SERVER_URL);
-  
+  useEffect(() => {
     socket.on('connect', () => console.log('Conectado al servidor Socket.IO'));
-    socket.on('disconnect', () => console.log('Desconectado del servidor Socket.IO'));
-  
+
     socket.on('data', (data) => {
-      setDistanceData([data, ...distanceData]);
+      setDataPoints(currentDataPoints => [...currentDataPoints, data]);
+      setLabels(currentLabels => [...currentLabels, new Date().toLocaleTimeString()]);
+      
+      // Mantener solo los últimos 20 puntos y etiquetas para el gráfico
+      if (dataPoints.length > 20) {
+        setDataPoints(currentDataPoints => currentDataPoints.slice(1));
+        setLabels(currentLabels => currentLabels.slice(1));
+        console.log(data);
+      }
+      console.log("estos son los datos", data);
     });
-     
+
     return () => {
-      socket.disconnect();
+      socket.off('connect');
+      socket.off('data');
     };
-  }, []);
-  
-   
+  }, [dataPoints]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tabla de Distancia</Text>
-      <FlatList
-        data={distanceData}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.row}>
-            <Text style={styles.distance}>{item} cm</Text>
-          </View>
-        )}
+    <View>
+      <Text>Distancia en Tiempo Real</Text>
+      <LineChart
+        data={{
+          labels: labels,
+          datasets: [
+            {
+              data: dataPoints
+            }
+          ]
+        }}
+        width={Dimensions.get("window").width - 16} // Ancho de la pantalla menos los márgenes
+        height={220}
+        chartConfig={{
+          backgroundColor: "#e26a00",
+          backgroundGradientFrom: "#fb8c00",
+          backgroundGradientTo: "#ffa726",
+          decimalPlaces: 2, // Número de decimales en los puntos de datos, ajusta según necesidad
+          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          style: {
+            borderRadius: 16
+          },
+          propsForDots: {
+            r: "6",
+            strokeWidth: "2",
+            stroke: "#ffa726"
+          }
+        }}
+        bezier // Suaviza la línea del gráfico
+        style={{
+          marginVertical: 8,
+          borderRadius: 16
+        }}
       />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  distance: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
+export default SensoresScreen;
 
-export default DistanceTableScreen;
+

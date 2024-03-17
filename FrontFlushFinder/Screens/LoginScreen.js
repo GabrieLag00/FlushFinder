@@ -88,6 +88,9 @@ function LoginScreen({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Regístrate aquí</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Sensores')}>
+          <Text>Prueba de sensores</Text>
+        </TouchableOpacity>
       </View>
 
     </View>

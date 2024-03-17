@@ -6,7 +6,8 @@ import RegisterScreen from './Screens/RegisterScreen';
 import GenderScreen from './Screens/GenderScreen';
 import UbicationScreen from './Screens/UbicationScreen';
 import ToiletsScreen from './Screens/ToiletsScreen';
-import ApiScreen from './Screens/ApiScreen'
+import ApiScreen from './Screens/ApiScreen';
+import SensoresScreen from './Screens/SensoresScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ function App() {
         <Stack.Screen name="Ubication" component={UbicationScreen} />
         <Stack.Screen name="Toilets" component={ToiletsScreen} />
         <Stack.Screen name="Api" component={ApiScreen} />
+        <Stack.Screen name="Sensores" component={SensoresScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
