@@ -60,36 +60,46 @@ export const registrarUsuario = async (req, res) => {
 
 // Controlador de login de usuario
 export const loginUsuario = async (req, res) => {
-    try {
-      // Validar los datos de entrada con Zod
-      const datosValidados = LoginSchema.parse(req.body);
-  
-      // Buscar al usuario por email
-      const usuario = await Usuario.findOne({ where: { email: datosValidados.email } });
-      
-      // Verificar si el usuario existe y la contraseña es correcta
-      if (!usuario || !bcrypt.compareSync(datosValidados.contrasena, usuario.contrasena)) {
-        return res.status(401).json({ message: "Correo electrónico o contraseña inválidos." });
-      }
-  
-      // Generar el token JWT
-      const token = jwt.sign(
-        { id: usuario.id }, // Payload del token
-        process.env.JWT_SECRET, // Clave secreta para firmar el token
-        { expiresIn: '24h' } // Opciones del token
-      );
-  
-      res.json({ message: "Login exitoso", token, usuarioId: usuario.id });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        // Manejar errores de validación de Zod
-        return res.status(400).json({ errors: error.errors });
-      }
-      // Manejar otros errores
-      console.error(error);
-      res.status(500).json({ message: "Error al iniciar sesión" });
+  try {
+    // Validar los datos de entrada con Zod
+    const datosValidados = LoginSchema.parse(req.body);
+
+    // Buscar al usuario por email
+    const usuario = await Usuario.findOne({ where: { email: datosValidados.email } });
+    
+    // Verificar si el usuario existe y la contraseña es correcta
+    if (!usuario || !bcrypt.compareSync(datosValidados.contrasena, usuario.contrasena)) {
+      return res.status(401).json({ message: "Correo electrónico o contraseña inválidos." });
     }
-  };
+
+    // Generar el token JWT
+    const token = jwt.sign(
+      { id: usuario.id }, // Payload del token
+      process.env.JWT_SECRET, // Clave secreta para firmar el token
+      { expiresIn: '24h' } // Opciones del token
+    );
+
+    // Incluir el nombre y email en la respuesta
+    res.json({
+      message: "Login exitoso",
+      token,
+      usuario: {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email
+      }
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      // Manejar errores de validación de Zod
+      return res.status(400).json({ errors: error.errors });
+    }
+    // Manejar otros errores
+    console.error(error);
+    res.status(500).json({ message: "Error al iniciar sesión" });
+  }
+};
+
 
   export const obtenerDatosUsuario = async (req, res) => {
     try {
