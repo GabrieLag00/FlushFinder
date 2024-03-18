@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import io from 'socket.io-client';
 
-const socket = io("http://192.168.0.167:5000");
+const socket = io("http://192.168.100.18:5000");
 
 const ApiScreen = () => {
     const [datosArduino, setDatosArduino] = useState('Esperando datos...');

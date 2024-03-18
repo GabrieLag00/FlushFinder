@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { stylesLogin } from './LoginScreen';
 import { registrarUsuario } from '../api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Asegúrate de incluir `route` en las props para acceder a los parámetros
 function GenderSelector({ navigation, route }) {
@@ -14,13 +15,25 @@ function GenderSelector({ navigation, route }) {
 
   const completeRegistration = async (selectedGender) => {
     try {
-      await registrarUsuario({
+      const response = await registrarUsuario({
         nombre,
         email,
         contrasena,
-        genero: selectedGender === 'M' ? 'M' : 'F', // Convierte 'male' a 'M' y 'female' a 'F'
+        genero: selectedGender,
       });
-      Alert.alert("Registro exitoso", "Tu cuenta ha sido creada.");
+
+      if (response.token) {
+        // Guarda el token en AsyncStorage
+        await AsyncStorage.setItem('userToken', response.token);
+        // Opcionalmente, puedes marcar el estado de sesión como verdadero
+        await AsyncStorage.setItem('isLoggedIn', 'true');
+        // Navega a la pantalla Ubication
+        navigation.navigate('Ubication');
+        Alert.alert("Registro exitoso", "Tu cuenta ha sido creada.");
+      } else {
+        // Si no se obtiene un token, muestra un mensaje de error
+        Alert.alert("Registro fallido", "No se pudo completar tu registro.");
+      }
     } catch (error) {
       console.error("Error durante el registro: ", error);
       Alert.alert("Error en el registro", "No se pudo completar tu registro. Inténtalo de nuevo.");

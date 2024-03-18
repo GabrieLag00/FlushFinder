@@ -25,16 +25,27 @@ export const registrarUsuario = async (req, res) => {
     const nuevoUsuario = await Usuario.create({
       nombre: datosValidados.nombre,
       email: datosValidados.email,
-      contrasena: contrasenaHash, // Guardar la contraseña hasheada
+      contrasena: contrasenaHash,
       genero: datosValidados.genero,
     });
 
-    // Opcional: Eliminar la contraseña del objeto antes de devolverlo
-    const usuarioParaRespuesta = { ...nuevoUsuario.toJSON() };
-    delete usuarioParaRespuesta.contrasena;
+    // Generar el token para el nuevo usuario
+    const token = jwt.sign({ id: nuevoUsuario.usuarioID }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
-    // Responder con éxito
-    res.status(201).json({ message: "Usuario registrado con éxito", usuario: usuarioParaRespuesta });
+    // Opcional: Excluir la contraseña del objeto de respuesta
+    const usuarioParaRespuesta = {
+      usuarioID: nuevoUsuario.usuarioID,
+      nombre: nuevoUsuario.nombre,
+      email: nuevoUsuario.email,
+      genero: nuevoUsuario.genero,
+    };
+
+    // Responder con éxito, incluyendo el token y los datos del usuario en la respuesta
+    res.status(201).json({
+      message: "Usuario registrado con éxito",
+      token, // Incluye el token en la respuesta
+      usuario: usuarioParaRespuesta,
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       // Manejar errores de validación de Zod
@@ -45,6 +56,7 @@ export const registrarUsuario = async (req, res) => {
     res.status(500).json({ message: "Error al registrar el usuario" });
   }
 };
+
 
 // Controlador de login de usuario
 export const loginUsuario = async (req, res) => {
@@ -76,5 +88,26 @@ export const loginUsuario = async (req, res) => {
       // Manejar otros errores
       console.error(error);
       res.status(500).json({ message: "Error al iniciar sesión" });
+    }
+  };
+
+  export const obtenerDatosUsuario = async (req, res) => {
+    try {
+      // Asumiendo que el ID del usuario viene en la ruta o en un token JWT
+      const usuarioId = req.params.id || req.usuario.id;
+  
+      // Buscar al usuario por ID
+      const usuario = await Usuario.findByPk(usuarioId, {
+        attributes: { exclude: ['contrasena'] } // Excluir la contraseña del resultado
+      });
+  
+      if (!usuario) {
+        return res.status(404).json({ message: "Usuario no encontrado." });
+      }
+  
+      res.json({ usuario });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error al obtener los datos del usuario" });
     }
   };

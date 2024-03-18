@@ -32,8 +32,13 @@ function LoginScreen({ navigation }) {
       const response = await loginUsuario({ email, contrasena });
 
       if (response.token) {
+        //Datos de usuario
+        const userData = {
+          token: response.token,
+          id: response.usuarioId, // Asegúrate de que el backend envíe este dato
+        };
         // Guardar el token y el estado de sesión en AsyncStorage
-        await AsyncStorage.setItem('userToken', response.token);
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
         await AsyncStorage.setItem('isLoggedIn', 'true');
 
         // Redirigir a la pantalla "Ubication"

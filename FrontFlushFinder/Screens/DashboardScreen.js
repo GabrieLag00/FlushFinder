@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { stylesLogin } from './LoginScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 function DashboardScreen({ navigation }) {
   const [isActive, setIsActive] = useState(false);
   const handlePress = () => {
     setIsActive(!isActive);
   };
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('userData'); // Asumiendo que así guardaste los datos de sesión
+    await AsyncStorage.removeItem('isLoggedIn');
+    navigation.navigate('Login'); // Asegúrate de que 'Login' corresponda al nombre de tu pantalla de login en el Navigator
+  };
+  
+
 
   return (
     <View style={stylesLogin.container}>
@@ -34,7 +44,7 @@ function DashboardScreen({ navigation }) {
                 style={stylesDashboard.logo}
               />
               {isActive && (
-                <TouchableOpacity style={stylesDashboard.overlay} onPress={() => navigation.navigate('Sos')}>
+                <TouchableOpacity style={stylesDashboard.overlay} onPress={handleLogout}>
                   <Text style={stylesDashboard.logoutText}>
                     LogOut
                   </Text>
