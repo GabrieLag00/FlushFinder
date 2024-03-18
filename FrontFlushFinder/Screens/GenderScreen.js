@@ -22,11 +22,20 @@ function GenderSelector({ navigation, route }) {
         genero: selectedGender,
       });
 
-      if (response.token) {
-        // Guarda el token en AsyncStorage
-        await AsyncStorage.setItem('userToken', response.token);
-        // Opcionalmente, puedes marcar el estado de sesión como verdadero
+      if (response.token && response.usuario) {
+        // Preparar los datos del usuario con solo el nombre y el email
+        const userData = {
+            token: response.token,
+            usuario: {
+                nombre: response.usuario.nombre,
+                email: response.usuario.email,
+            }
+        };
+
+        // Guardar el token y los datos de usuario en AsyncStorage
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
         await AsyncStorage.setItem('isLoggedIn', 'true');
+
         // Navega a la pantalla Ubication
         navigation.navigate('Ubication');
         Alert.alert("Registro exitoso", "Tu cuenta ha sido creada.");
