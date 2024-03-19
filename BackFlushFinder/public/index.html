@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Socket.IO con Express</title>
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', () => {
+    const socket = io(); // Se conecta al host que sirve la página
+
+    socket.on('datosArduino', function(data) {
+      console.log(data);
+      document.getElementById('datos').innerText = JSON.stringify(data);
+    });
+  });
+</script>
+</head>
+<body>
+<h1>Datos recibidos del servidor:</h1>
+<div id="datos">Esperando datos...</div>
+</body>
+</html>
