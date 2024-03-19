@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import io from 'socket.io-client';
+import { date } from 'zod';
 
-const SOCKET_SERVER_URL = 'http://localhost:8765';
+const SOCKET_SERVER_URL = 'http://localhost:8765'; // Asegúrate de que esta dirección sea accesible desde tu dispositivo
 
 const DistanceTableScreen = () => {
   const [distanceData, setDistanceData] = useState([]);
 
-  useEffect((distanceData) => {
+  useEffect(() => {
     const socket = io(SOCKET_SERVER_URL);
-  
+
     socket.on('connect', () => console.log('Conectado al servidor Socket.IO'));
     socket.on('disconnect', () => console.log('Desconectado del servidor Socket.IO'));
-  
+
+    // Actualiza el estado para incluir los nuevos datos recibidos
     socket.on('data', (data) => {
-      setDistanceData([data, ...distanceData]);
+      console.log('Datos recibidos:', data);
+      // Añade los nuevos datos al inicio del arreglo para mostrar los más recientes arriba
+      setDistanceData(currentData => [data.toString(), ...currentData]);
     });
-     
+
     return () => {
       socket.disconnect();
     };
   }, []);
-  
-   
 
   return (
     <View style={styles.container}>
@@ -64,3 +66,4 @@ const styles = StyleSheet.create({
 });
 
 export default DistanceTableScreen;
+
