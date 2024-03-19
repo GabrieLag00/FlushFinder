@@ -31,11 +31,19 @@ function LoginScreen({ navigation }) {
 
       const response = await loginUsuario({ email, contrasena });
 
-      if (response.token) {
-        // Guardar el token y el estado de sesión en AsyncStorage
-        await AsyncStorage.setItem('userToken', response.token);
+      if (response.token && response.usuario) {
+        // Datos de usuario y token
+        const userData = {
+            token: response.token,
+            usuario: {
+                nombre: response.usuario.nombre,
+                email: response.usuario.email,
+            }
+        };
+        // Guardar el token y los datos de usuario en AsyncStorage
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
         await AsyncStorage.setItem('isLoggedIn', 'true');
-
+  
         // Redirigir a la pantalla "Ubication"
         navigation.navigate('Ubication');
       } else {

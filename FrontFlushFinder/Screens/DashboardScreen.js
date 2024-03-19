@@ -1,12 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { stylesLogin } from './LoginScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 function DashboardScreen({ navigation }) {
+  const [user, setUser] = useState({ name: 'Cargando...', email: 'Cargando...' });
+
   const [isActive, setIsActive] = useState(false);
   const handlePress = () => {
     setIsActive(!isActive);
   };
+
+  
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userDataString = await AsyncStorage.getItem('userData');
+      if (userDataString) {
+        const userData = JSON.parse(userDataString);
+        setUser({ name: userData.usuario.nombre, email: userData.usuario.email });
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('userData');
+    await AsyncStorage.removeItem('isLoggedIn');
+    navigation.navigate('Login');
+  };
+  
+
 
   return (
     <View style={stylesLogin.container}>
@@ -21,23 +47,24 @@ function DashboardScreen({ navigation }) {
         <View style={stylesDashboard.userInfo}>
 
           <TouchableOpacity onPress={handlePress}>
-            <Image
-              /*source={{ uri: user.photoUrl }}*/
-              source={require('../images/pxndx-photo-user.jpg')}
-              style={stylesDashboard.userPhoto}
-            />
-            {isActive && (
-              <TouchableOpacity style={stylesDashboard.overlay} onPress={() => navigation.navigate('Login')}>
-                <Text style={stylesDashboard.logoutText}>
-                  LogOut
-                </Text>
-              </TouchableOpacity>
-            )}
+            <View style={stylesDashboard.container}>
+              <Image
+                source={require('../images/FlushFinder-logo-white.png')}
+                style={stylesDashboard.logo}
+              />
+              {isActive && (
+                <TouchableOpacity style={stylesDashboard.overlay} onPress={handleLogout}>
+                  <Text style={stylesDashboard.logoutText}>
+                    LogOut
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </TouchableOpacity>
 
           <View style={stylesDashboard.userInfoText}>
-            <Text style={stylesDashboard.userName}>{/*{user.name}*/}Gahel</Text>
-            <Text style={stylesDashboard.userEmail}>{/*{user.email}*/}gahel@gmail.com</Text>
+          <Text style={stylesDashboard.userName}>{user.name}</Text>
+            <Text style={stylesDashboard.userEmail}>{user.email}</Text>
           </View>
         </View>
       </View>
