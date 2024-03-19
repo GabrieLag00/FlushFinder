@@ -18,29 +18,21 @@ function DashboardScreen({ navigation }) {
           style={stylesDashboard.logo}
         />
 
-        {/* Contenido del usuario a la derecha */}
         <View style={stylesDashboard.userInfo}>
 
-          <Image
-            /*source={{ uri: user.photoUrl }}*/
-            source={require('../images/pxndx-photo-user.jpg')}
-            style={stylesDashboard.userPhoto}
-          />
-
           <TouchableOpacity onPress={handlePress}>
-            <View style={stylesDashboard.container}>
-              <Image
-                source={require('../images/FlushFinder-logo-white.png')}
-                style={stylesDashboard.logo}
-              />
-              {isActive && (
-                <TouchableOpacity style={stylesDashboard.overlay} onPress={() => navigation.navigate('Sos')}>
-                  <Text style={stylesDashboard.logoutText}>
-                    LogOut
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
+            <Image
+              /*source={{ uri: user.photoUrl }}*/
+              source={require('../images/pxndx-photo-user.jpg')}
+              style={stylesDashboard.userPhoto}
+            />
+            {isActive && (
+              <TouchableOpacity style={stylesDashboard.overlay} onPress={() => navigation.navigate('Login')}>
+                <Text style={stylesDashboard.logoutText}>
+                  LogOut
+                </Text>
+              </TouchableOpacity>
+            )}
           </TouchableOpacity>
 
           <View style={stylesDashboard.userInfoText}>

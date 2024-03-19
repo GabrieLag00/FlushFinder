@@ -90,6 +90,12 @@ function LoginScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
+      <View style={stylesLogin.buttonContainer}>
+        <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('Dashboard')}>
+          <Text style={stylesLogin.buttonText}>DHASBOARD</Text>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 }

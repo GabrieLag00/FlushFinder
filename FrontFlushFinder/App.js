@@ -15,7 +15,7 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Api"/*"Api"*/>
+      <Stack.Navigator initialRouteName="Login"/*"Api"*/>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Gender" component={GenderScreen} />
