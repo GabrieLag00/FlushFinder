@@ -1,16 +1,9 @@
 import axios from 'axios';
 
-<<<<<<< HEAD
 const API_URL_EDIFICIOS = 'http://192.168.0.57:8081/api/edificios/edificios';
 const API_URL_CONSERJES = 'http://192.168.0.57:8081/api/conserjes/conserjes';
 const API_URL_REGISTRO = 'http://192.168.0.57:8081/api/users/register';
 const API_URL_LOGIN = 'http://192.168.0.57:8081/api/users/login';
-=======
-const API_URL_EDIFICIOS = 'http://192.168.100.18:5000/api/edificios/edificios';
-const API_URL_CONSERJES = 'http://192.168.100.18:5000/api/conserjes/conserjes';
-const API_URL_REGISTRO = 'http://192.168.100.18:5000/api/users/register';
-const API_URL_LOGIN = 'http://192.168.100.18:5000/api/users/login';
->>>>>>> a9c2bd98d6f87e99be4238f2fe7d0dea92d8273c
 
 export const getEdificios = async () => {
   try {
