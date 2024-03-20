@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { stylesLogin } from '../Screens/LoginScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -31,54 +30,40 @@ function Header({ navigation }) {
   };
 
   return (
-    <View style={stylesLogin.container}>
-
-      <View style={stylesHeader.container}>
-
-        <View style={stylesHeader.userInfo}>
-          <TouchableOpacity onPress={handlePress}>
-            <View style={stylesHeader.container}>
-              <Image
-                source={require('../images/FlushFinder-logo-white.png')}
-                style={stylesHeader.logo}
-              />
-              {isActive && (
-                <TouchableOpacity style={stylesHeader.overlay} onPress={handleLogout}>
-                  <Text style={stylesHeader.logoutText}>
-                    LogOut
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </TouchableOpacity>
-
-          <View style={stylesHeader.userInfoText}>
-            <Text style={stylesHeader.userName}>{user.name}</Text>
-            <Text style={stylesHeader.userEmail}>{user.email}</Text>
-          </View>
+    <View style={stylesHeader.ContainerUserInfo}>
+      <TouchableOpacity onPress={handlePress}>
+        <View style={stylesHeader.container}>
+          <Image
+            source={require('../images/FlushFinder-logo-white.png')}
+            style={stylesHeader.logo}
+          />
+          {isActive && (
+            <TouchableOpacity style={stylesHeader.overlay} onPress={handleLogout}>
+              <Text style={stylesHeader.logoutText}>
+                LogOut
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
-      </View>
+      </TouchableOpacity>
 
+      <View style={stylesHeader.userInfoText}>
+        <Text style={stylesHeader.userName}>{user.name}</Text>
+        <Text style={stylesHeader.userEmail}>{user.email}</Text>
+      </View>
     </View>
   );
 }
 
 export const stylesHeader = StyleSheet.create({
-
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 80,
-    backgroundColor: '#8594CB',
-  },
   logo: {
     width: 60,
     height: 80,
   },
-  userInfo: {
+  ContainerUserInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: 'green'
   },
   userPhoto: {
     width: 70,
