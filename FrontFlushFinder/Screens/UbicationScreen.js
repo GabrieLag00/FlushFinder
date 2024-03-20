@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { stylesLogin } from './LoginScreen';
+import Header from '../components/Header';
 
 function Ubicacion({ navigation }) {
   const images = [
@@ -22,6 +23,8 @@ function Ubicacion({ navigation }) {
   return (
     <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
 
+      <Header navigation={navigation} />
+
       <Text style={[stylesLogin.title, stylesUbication.titleUbication]}>Selecciona tu ubicación</Text>
 
       <View style={stylesUbication.rowContainer}>
@@ -29,7 +32,7 @@ function Ubicacion({ navigation }) {
           <View key={index} style={stylesUbication.itemContainer}>
             <TouchableOpacity onPress={() => navigation.navigate('Toilets')}>
               <Image source={image} style={stylesUbication.image} />
-              <Text style={[stylesUbication.textUbication,stylesUbication.textContainer]}>{buildingNames[index]}</Text>
+              <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{buildingNames[index]}</Text>
             </TouchableOpacity>
           </View>
         ))}

@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image 
 import { stylesToilets } from './ToiletsScreen';
 import { stylesUbication } from './UbicationScreen';
 import { stylesLogin } from './LoginScreen';
+import Header from '../components/Header';
 
 function SosScreen({ navigation }) {
   const imageReturn = require('../images/return.png');
@@ -29,6 +30,8 @@ function SosScreen({ navigation }) {
   return (
     <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
 
+      <Header navigation={navigation} />
+
       <View style={stylesSos.buttonContainer}>
         <TouchableOpacity style={stylesSos.buttonSos} onPress={() => navigation.goBack()}>
           <Image style={stylesSos.imgReturn} source={imageReturn} />
@@ -44,7 +47,7 @@ function SosScreen({ navigation }) {
             <TouchableOpacity key={index} onPress={() => handleStarPress(index)} style={stylesSos.starButton}>
               <Image
                 source={index <= ratingClean ? require('../images/jabon-rating-filled.png') : require('../images/jabon-rating-empty.png')}
-                style={[stylesSos.starImage, {marginBottom:'20%'}]}
+                style={[stylesSos.starImage, { marginBottom: '20%' }]}
               />
             </TouchableOpacity>
           ))}
@@ -153,7 +156,7 @@ export const stylesSos = StyleSheet.create({
   },
   ratingViewContainer: {
     marginVertical: '10%',
-    alignItems:'center'
+    alignItems: 'center'
   },
 
 });

@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, FlatList, 
 import { stylesLogin } from './LoginScreen';
 import { stylesUbication } from './UbicationScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Header from '../components/Header';
 
 function Banos({ navigation }) {
     const images = [
@@ -32,6 +33,8 @@ function Banos({ navigation }) {
 
     return (
         <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
+
+            <Header navigation={navigation} />
 
             <FlatList
                 data={options}
