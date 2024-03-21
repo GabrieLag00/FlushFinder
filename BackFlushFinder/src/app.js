@@ -3,6 +3,7 @@ import express from 'express';
 import morgan from 'morgan';
 import usersRoutes from './routes/usersRoutes.js'; // Asegúrate de ajustar la ruta de importación según tu estructura de directorios
 import appRoutes from './routes/appRoutes.js';
+import conserjesRoutes from './routes/conserjesRoutes.js';
 import cors from 'cors'
 import path from 'path';
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(morgan('dev'));
 
 // Usar las rutas 
+app.use('/api/conserjes', conserjesRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/edificios', appRoutes); // http://localhost:4000/api/edificios/edificios
 app.use('/api/conserjes', appRoutes); // http://localhost:4000/api/conserjes/conserjes

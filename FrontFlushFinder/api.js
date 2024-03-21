@@ -1,11 +1,14 @@
 import axios from 'axios';
 
-const API_URL_EDIFICIOS = 'http://10.10.49.94:5000/api/edificios/edificios';
-const API_URL_CONSERJES = 'http://10.10.49.94:5000/api/conserjes/conserjes';
-const API_URL_REGISTRO = 'http://10.10.49.94:5000/api/users/register';
-const API_URL_LOGIN = 'http://10.10.49.94:5000/api/users/login';
+const API_URL_EDIFICIOS = 'http://192.168.1.71:5000/api/edificios/edificios';
+const API_URL_LOGIN_CONSERJES = 'http://192.168.1.71:5000/api/conserjes/login';
+const API_URL_CONSERJES = "http://192.168.1.71:5000/api/conserjes/conserjes";
+const API_URL_REGISTRO = 'http://192.168.1.71:5000/api/users/register';
+const API_URL_LOGIN = 'http://192.168.1.71:5000/api/users/login';
 
 export const getEdificios = async () => {
+
+
   try {
     const response = await axios.get(API_URL_EDIFICIOS);
     return response.data; // Axios envuelve la respuesta en un objeto `data`.
@@ -50,3 +53,14 @@ export const loginUsuario = async (credenciales) => {
     throw error;
   }
 };
+
+export const LoginConserje = async (credenciales) => {
+  try {
+    // Envía las credenciales al servidor
+    const response = await axios.post(API_URL_LOGIN_CONSERJES, credenciales);
+    return response.data;
+  } catch (error) {
+    console.error("Error en el login de conserje:", error.response ? error.response.data : error);
+    throw error;
+  }
+}

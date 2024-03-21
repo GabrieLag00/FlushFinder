@@ -96,6 +96,12 @@ function LoginScreen({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Regístrate aquí</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Api')}>
+          <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Login de conserje</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Api')}>
+          <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>API</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={stylesLogin.buttonContainer}>

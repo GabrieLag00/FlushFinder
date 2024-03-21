@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import io from 'socket.io-client';
 
-const socket = io("http://192.168.100.18:5000");
+const socket = io("http://192.168.1.71:8765");
 
 const ApiScreen = () => {
     const [datosArduino, setDatosArduino] = useState('Esperando datos...');
 
     useEffect(() => {
-        socket.on('datosArduino', (data) => {
-            console.log("Datos de Arduino recibidos:", data);
-            setDatosArduino(JSON.stringify(data));
+        socket.on('data', (data) => {
+            console.log("Datos recibidos:", data);
+            setDatosArduino(`Distancia: ${data} cm`);
         });
-
-        // Limpiar la suscripción al evento al desmontar el componente
+    
         return () => {
-            socket.off('datosArduino');
+            socket.off('data');
         };
     }, []);
+    
+    
+      
 
     return (
         <View style={styles.container}>
