@@ -27,13 +27,15 @@ io.on('connection', (socket) => {
 setInterval(() => {
   if (ultimoDatoDelArduino !== null) {
     const estado = ultimoDatoDelArduino.distance >= 10 ? "El baño está libre" : "El baño está ocupado";
-    // Emitimos tanto la distancia como el estado
-    io.emit('bathroomStatus', { distance: ultimoDatoDelArduino.distance, status: estado });
-    console.log('Enviando último dato del Arduino a todos los clientes:', ultimoDatoDelArduino, estado);
+    // Emitir la distancia y el estado como eventos separados
+    io.emit('distance', ultimoDatoDelArduino.distance);
+    io.emit('status', estado);
+    console.log(`Enviando distancia: ${ultimoDatoDelArduino.distance} y estado: ${estado}`);
   } else {
     console.log("No llegan los datos");
   }
 }, 4000);
+
 
 httpServerForSocketIO.listen(8765, () => {
   console.log('Servidor Socket.IO escuchando en el puerto 8765');

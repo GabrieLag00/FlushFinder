@@ -5,23 +5,30 @@ import io from 'socket.io-client';
 const socket = io("http://192.168.1.71:8765");
 
 const ApiScreen = () => {
-    const [bathroomData, setBathroomData] = useState({ distance: '', status: 'Esperando datos...' });
+    const [distance, setDistance] = useState('');
+    const [status, setStatus] = useState('Esperando datos...');
 
     useEffect(() => {
-        socket.on('bathroomStatus', (data) => {
-            console.log("Datos recibidos:", data);
-            setBathroomData(data);
+        socket.on('distance', (distanceData) => {
+            console.log("Distancia recibida:", distanceData);
+            setDistance(`${distanceData} cm`);
+        });
+
+        socket.on('status', (statusData) => {
+            console.log("Estado recibido:", statusData);
+            setStatus(statusData);
         });
 
         return () => {
-            socket.off('bathroomStatus');
+            socket.off('distance');
+            socket.off('status');
         };
     }, []);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Distancia: {bathroomData.distance} cm</Text>
-            <Text style={styles.text}>Estado: {bathroomData.status}</Text>
+            <Text style={styles.text}>Distancia: {distance}</Text>
+            <Text style={styles.text}>Estado: {status}</Text>
         </View>
     );
 };
@@ -40,4 +47,5 @@ const styles = StyleSheet.create({
 });
 
 export default ApiScreen;
+
 
