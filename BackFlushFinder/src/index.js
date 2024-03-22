@@ -1,18 +1,9 @@
-import express from 'express';
-import { createServer } from 'http';
-import { Server as WebsocketServer } from 'socket.io';
+import 'dotenv/config';
+import app from './app.js';
 import { connectDB } from './connect.js';
-import { error } from 'console';
-
-const app = express();
-
-const httpServerForExpress = createServer(app);
-httpServerForExpress.listen(4000, () => {
-  console.log('Servidor HTTP (Express) iniciado en el puerto 4000');
-  // Conectar a la base de datos
-  console.log(error);
-  connectDB();
-});
+import { Server as WebsocketServer } from 'socket.io';
+import http from 'http';
+import { createServer } from 'http';
 
 const httpServerForSocketIO = createServer();
 const io = new WebsocketServer(httpServerForSocketIO, {
@@ -25,8 +16,9 @@ let ultimoDatoDelArduino = null;
 
 io.on('connection', (socket) => {
   console.log('Un cliente se ha conectado a Socket.IO');
-  
+
   socket.on('data', (data) => {
+    // Asumimos que data es un objeto que contiene la distancia, p.ej., { distance: 5 }
     ultimoDatoDelArduino = data; // Almacena los datos recibidos
   });
 });
@@ -34,16 +26,29 @@ io.on('connection', (socket) => {
 // Emitir los últimos datos del Arduino cada 4 segundos
 setInterval(() => {
   if (ultimoDatoDelArduino !== null) {
-    io.emit('data', ultimoDatoDelArduino);
-    console.log('Enviando último dato del Arduino a todos los clientes:', ultimoDatoDelArduino);
+    const estado = ultimoDatoDelArduino.distance >= 10 ? "El baño está libre" : "El baño está ocupado";
+    // Emitimos tanto la distancia como el estado
+    io.emit('bathroomStatus', { distance: ultimoDatoDelArduino.distance, status: estado });
+    console.log('Enviando último dato del Arduino a todos los clientes:', ultimoDatoDelArduino, estado);
   } else {
-    console.log("no llegan los datos", error);
+    console.log("No llegan los datos");
   }
 }, 4000);
 
 httpServerForSocketIO.listen(8765, () => {
   console.log('Servidor Socket.IO escuchando en el puerto 8765');
 });
+
+// Crear el servidor HTTP con Express
+const server = http.createServer(app);
+
+// Iniciar el servidor HTTP
+const port = process.env.PORT || 5000; // Usar el puerto definido en el archivo .env o el puerto 5000 por defecto
+server.listen(port, () => {
+  console.log(`Servidor HTTP iniciado en el puerto ${port}`);
+});
+connectDB();
+
 
 
 
