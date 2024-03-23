@@ -2,19 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import io from 'socket.io-client';
 
-const socket = io("http://192.168.1.71:8765");
+const socket = io("http://10.10.49.81:8765");
 
 const ApiScreen = () => {
-    const [datosArduino, setDatosArduino] = useState('Esperando datos...');
+    const [distance, setDistance] = useState('');
+    const [status, setStatus] = useState('Esperando datos...');
 
     useEffect(() => {
-        socket.on('data', (data) => {
-            console.log("Datos recibidos:", data);
-            setDatosArduino(`Distancia: ${data} cm`);
+        socket.on('distance', (distanceData) => {
+            console.log("Distancia recibida:", distanceData);
+            setDistance(`${distanceData} cm`);
         });
-    
+
+        socket.on('status', (statusData) => {
+            console.log("Estado recibido:", statusData);
+            setStatus(statusData);
+        });
+
         return () => {
-            socket.off('data');
+            socket.off('distance');
+            socket.off('status');
         };
     }, []);
     
@@ -23,8 +30,8 @@ const ApiScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Datos recibidos del servidor:</Text>
-            <Text>{datosArduino}</Text>
+            <Text style={styles.text}>Distancia: {distance}</Text>
+            <Text style={styles.text}>Estado: {status}</Text>
         </View>
     );
 };
@@ -43,3 +50,5 @@ const styles = StyleSheet.create({
 });
 
 export default ApiScreen;
+
+
