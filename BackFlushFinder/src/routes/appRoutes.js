@@ -10,8 +10,8 @@ const router = Router();
 
 router.get('/edificios', obtenerEdificios); // Ruta edificios 
 router.get('/edificios/:edificioId/banos/:banoId', obtenerBano); //Ruta banos por id 
+router.get('/edificios/:edificioId/banos', obtenerBano); //Ruta para obtener todos los baños de un edificio específico
 router.get('/conserjes', obtenerConserjes); 
-
 
 export default router;
 
