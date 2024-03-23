@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import io from 'socket.io-client';
 
-const socket = io("http://192.168.100.18:5000");
+const socket = io("http://10.10.49.81:8765");
 
 const ApiScreen = () => {
     const [distance, setDistance] = useState('');
@@ -24,6 +24,9 @@ const ApiScreen = () => {
             socket.off('status');
         };
     }, []);
+    
+    
+      
 
     return (
         <View style={styles.container}>

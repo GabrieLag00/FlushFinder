@@ -2,7 +2,6 @@ import asyncio
 import socketio
 import serial
 
-# Crear una instancia de Socket.IO
 sio = socketio.AsyncClient()
 
 # Conectar con el servidor Socket.IO
@@ -77,5 +76,4 @@ async def main():
     )
 
 if __name__ == "__main__":
-    print("Iniciando servidor Socket.IO...")
-    asyncio.run(main())
+    asyncio.run(connect_socketio())
