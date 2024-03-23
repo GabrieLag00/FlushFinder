@@ -74,7 +74,7 @@ function LoginScreen({ navigation }) {
         value={email}
         onChangeText={setEmail}
       />
-      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+      {errors.email && <Text style={stylesLogin.errorText}>{errors.email}</Text>}
       <TextInput
         style={stylesLogin.input}
         placeholder="Contraseña"
@@ -83,7 +83,7 @@ function LoginScreen({ navigation }) {
         value={contrasena}
         onChangeText={setContrasena}
       />
-      {errors.contrasena && <Text style={styles.errorText}>{errors.contrasena}</Text>}
+      {errors.contrasena && <Text style={stylesLogin.errorText}>{errors.contrasena}</Text>}
       <View style={stylesLogin.buttonContainer}>
         <TouchableOpacity style={stylesLogin.button} onPress={handleLogin}>
           <Text style={stylesLogin.buttonText}>Iniciar sesión</Text>
