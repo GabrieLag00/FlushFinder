@@ -3,6 +3,7 @@ import { connectDB } from './connect.js';
 import { Server as WebsocketServer } from 'socket.io';
 import http from 'http';
 import { createServer } from 'http';
+import '../envConfig.js'; // Asegura que este import esté al principio
 
 const httpServerForSocketIO = createServer();
 const io = new WebsocketServer(httpServerForSocketIO, {
@@ -11,46 +12,24 @@ const io = new WebsocketServer(httpServerForSocketIO, {
   },
 });
 
-let ultimoDatoDelArduino = null;
-
 io.on('connection', (socket) => {
   console.log('Un cliente se ha conectado a Socket.IO');
-
-  socket.on('data', (data) => {
-    // Asumimos que data es un objeto que contiene la distancia, p.ej., { distance: 5 }
-    ultimoDatoDelArduino = data; // Almacena los datos recibidos
-  });
 });
 
-// Emitir los últimos datos del Arduino cada 4 segundos
-setInterval(() => {
-  if (ultimoDatoDelArduino !== null) {
-    const estado = ultimoDatoDelArduino.distance >= 10 ? "El baño está libre" : "El baño está ocupado";
-    // Emitir la distancia y el estado como eventos separados
-    io.emit('distance', ultimoDatoDelArduino.distance);
-    io.emit('status', estado);
-    console.log(`Enviando distancia: ${ultimoDatoDelArduino.distance} y estado: ${estado}`);
-  } else {
-    console.log("No llegan los datos");
-  }
-}, 4000);
-
-
-httpServerForSocketIO.listen(8765, () => {
-  console.log('Servidor Socket.IO escuchando en el puerto 8765');
+// Usar el puerto definido en .env para Socket.IO
+httpServerForSocketIO.listen(process.env.SOCKET_IO_PORT, () => {
+  console.log(`Servidor Socket.IO escuchando en el puerto ${process.env.SOCKET_IO_PORT}`);
 });
 
 // Crear el servidor HTTP con Express
 const server = http.createServer(app);
 
-// Iniciar el servidor HTTP
-const port = process.env.PORT || 5000; // Usar el puerto definido en el archivo .env o el puerto 5000 por defecto
+// Usar el puerto definido en .env para el servidor HTTP
+const port = process.env.HTTP_PORT; // Cambiar aquí si decides usar HTTP_PORT
 server.listen(port, () => {
   console.log(`Servidor HTTP iniciado en el puerto ${port}`);
 });
 connectDB();
-
-
 
 
 
