@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, FlatList, Modal } from 'react-native';
 import { stylesLogin } from './LoginScreen';
 import { stylesUbication } from './UbicationScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Header from '../components/Header';
+import { getBanosDelEdificio } from '../api';
 
-function Banos({ navigation }) {
-    const images = [
-        require('../images/toilet.png'),
-        require('../images/toilet.png'),
-        require('../images/toilet.png'),
-        require('../images/toilet.png'),
-    ];
+function Banos({ navigation, route }) {
+    const { edificioId } = route.params;
+    const [banos, setBanos] = useState([]);
+    const [selectedBano, setSelectedBano] = useState(null); // Cambiado para manejar el baño seleccionado
+    const [modalVisible, setModalVisible] = useState(false);
 
-    const buildingNames = ['Sanitario 1', 'Sanitario 2', 'Sanitario 3', 'Sanitario 4', 'Sanitario 5', 'Sanitario 6', 'Sanitario 7', 'Sanitario 8', 'Sanitario 9', 'Sanitario 10'];
+    useEffect(() => {
+        const cargarBanos = async () => {
+            try {
+                const data = await getBanosDelEdificio(edificioId);
+                setBanos(data);
+            } catch (error) {
+                console.error("Error al cargar los baños:", error);
+            }
+        };
+
+        cargarBanos();
+    }, [edificioId]);
+
 
     const options = [
         { id: 1, label: [<MaterialCommunityIcons name="check-circle" size={20} />, <View style={stylesLogin.viewSpace} />, 'Disponibles'] },
@@ -23,76 +34,63 @@ function Banos({ navigation }) {
         { id: 5, label: [<MaterialCommunityIcons name="paper-roll" size={20} />, <View style={stylesLogin.viewSpace} />, 'Con papel'] },
     ];
 
-    const [selectedSanitarioIndex, setSelectedSanitarioIndex] = useState(null); // Estado para controlar el sanitario seleccionado
-    const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
-
-    const handleSanitarioPress = (index) => {
-        setSelectedSanitarioIndex(index);
-        setModalVisible(true);
-    };
+  
+ 
 
     return (
         <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
+        <Header navigation={navigation} />
 
-            <Header navigation={navigation} />
+        {/* Aquí iría tu FlatList de opciones si aún necesitas incluirla */}
 
-            <FlatList
-                data={options}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
-                    <View style={stylesToilets.option}>
-                        <TouchableOpacity>
-                            <Text style={stylesToilets.optionText}>{item.label}</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
-                keyExtractor={(item) => item.id.toString()}
-            />
+        <View style={stylesUbication.rowContainer}>
+            {banos.map((bano) => (
+                <View key={bano.BanoID} style={stylesUbication.itemContainer}>
+                    <TouchableOpacity onPress={() => {
+                        setSelectedBano(bano);
+                        setModalVisible(true);
+                    }}>
+                        <Image source={require('../images/toilet.png')} style={stylesToilets.image} />
+                        <Text style={[stylesUbication.textUbication, stylesToilets.textContainer]}>
+                            {bano.Nombre}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            ))}
+        </View>
 
-            {/*<Text style={stylesLogin.title}>Baños de {'{Ubication}'}</Text>*/}
-
-
-            <View style={stylesUbication.rowContainer}>
-                {images.map((image, index) => (
-                    <View key={index} style={stylesUbication.itemContainer}>
-                        <TouchableOpacity onPress={() => handleSanitarioPress(index)}>
-                            <Image source={image} style={stylesToilets.image} />
-                            <Text style={[stylesUbication.textUbication, stylesToilets.textContainer]}>{buildingNames[index]}</Text>
-                        </TouchableOpacity>
-                    </View>
-                ))}
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => setModalVisible(false)}
-                >
-                    <View style={stylesToilets.modalContainer}>
-                        <View style={stylesToilets.modalContent}>
-                            <Image source={images[selectedSanitarioIndex]} style={[stylesToilets.image, stylesToilets.imageModal]} />
-                            <Text style={stylesToilets.bathTitle}>{buildingNames[selectedSanitarioIndex]}</Text>
-                            <Text style={stylesToilets.bathStatus}>Disponible</Text>
-                            <View style={stylesToilets.bathContainer}>
-                                <Image source={require('../images/papel-higienico.png')} style={stylesToilets.bathImage} />
-                                <Text style={stylesToilets.bathStatusText}>98%</Text>
-                            </View>
-                            <View style={stylesToilets.bathContainer}>
-                                <Image source={require('../images/jabon.png')} style={stylesToilets.bathImage} />
-                                <Text style={stylesToilets.bathStatusText}>62%</Text>
-                            </View>
-                            <TouchableOpacity style={stylesToilets.buttonBath} onPress={() => navigation.navigate('Sos')}>
-                                <Text style={stylesToilets.buttonBathText}>Reportar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                <Text style={stylesToilets.closeButton}>Cerrar</Text>
-                            </TouchableOpacity>
+        {selectedBano && (
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={stylesToilets.modalContainer}>
+                    <View style={stylesToilets.modalContent}>
+                        <Image source={require('../images/toilet.png')} style={stylesToilets.imageModal} />
+                        <Text style={stylesToilets.bathTitle}>{selectedBano.Nombre}</Text>
+                        <Text style={stylesToilets.bathStatus}>{selectedBano.Estado}</Text>
+                        {/* Aquí se asume que estas imágenes y textos son simbólicos */}
+                        <View style={stylesToilets.bathContainer}>
+                            <Image source={require('../images/papel-higienico.png')} style={stylesToilets.bathImage} />
+                            <Text style={stylesToilets.bathStatusText}>98%</Text>
                         </View>
+                        <View style={stylesToilets.bathContainer}>
+                            <Image source={require('../images/jabon.png')} style={stylesToilets.bathImage} />
+                            <Text style={stylesToilets.bathStatusText}>62%</Text>
+                        </View>
+                        <TouchableOpacity style={stylesToilets.buttonBath} onPress={() => navigation.navigate('Sos')}>
+                            <Text style={stylesToilets.buttonBathText}>Reportar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setModalVisible(false)}>
+                            <Text style={stylesToilets.closeButton}>Cerrar</Text>
+                        </TouchableOpacity>
                     </View>
-                </Modal>
-            </View>
-
-        </ScrollView>
+                </View>
+            </Modal>
+        )}
+    </ScrollView>
     );
 }
 

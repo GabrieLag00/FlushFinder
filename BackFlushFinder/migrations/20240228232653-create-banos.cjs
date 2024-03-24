@@ -31,6 +31,10 @@ module.exports = {
       Ubicacion: {
         type: Sequelize.STRING(100),
         allowNull: true
+      },
+      Nombre: {
+        type: Sequelize.STRING(50), // Define el tipo de dato y la longitud máxima
+        allowNull: false, // Indica que el campo no puede ser nulo
       }
     });
   },

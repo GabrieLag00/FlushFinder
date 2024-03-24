@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
 export const LoginConserjeSchema = z.object({
-  matricula: z.number().min(1, "La matrícula es requerida"),
-  nombre: z.string().min(1, "El nombre es requerido")
+  matricula: z.number().min(1, { message: "La matrícula debe ser positiva" }),
+  contrasena: z.string({ required_error: "La contraseña es requerida" }),
 });

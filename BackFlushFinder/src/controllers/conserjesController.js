@@ -1,5 +1,6 @@
 // controllers/conserjesControllers.js
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import { LoginConserjeSchema } from '../schemas/conserjesSchemas.js';
 import Conserje from '../models/conserje.js';
 import { z } from 'zod';
@@ -9,7 +10,7 @@ export const loginConserje = async (req, res) => {
     // Validar los datos de entrada con Zod
     const datosValidados = LoginConserjeSchema.parse(req.body);
 
-    // Buscar al conserje por matrícula. Asegúrate de que el campo en la base de datos y aquí coincidan en mayúsculas/minúsculas.
+    // Buscar al conserje por matrícula.
     const conserje = await Conserje.findOne({ where: { Matricula: datosValidados.matricula } });
 
     // Verificar si el conserje existe
@@ -17,8 +18,12 @@ export const loginConserje = async (req, res) => {
       return res.status(401).json({ message: "Matrícula inválida." });
     }
 
-    // Aquí asumimos que la contraseña es igual a la matrícula, por lo que ya ha sido "validada".
-    // Sin embargo, esta práctica no es recomendable para la seguridad.
+    // Comparar la contraseña ingresada con la almacenada en la base de datos
+    const contrasenaValida = bcrypt.compareSync(datosValidados.contrasena, conserje.Contrasena); // Asumiendo que el campo de la contraseña en el modelo es Contrasena
+
+    if (!contrasenaValida) {
+      return res.status(401).json({ message: "Contraseña inválida." });
+    }
 
     // Generar el token JWT
     const token = jwt.sign(
@@ -39,7 +44,6 @@ export const loginConserje = async (req, res) => {
   }
 };
 
-
 export const obtenerConserjes = async (req, res) => {
   try {
     const conserjes = await Conserje.findAll();
@@ -49,4 +53,3 @@ export const obtenerConserjes = async (req, res) => {
     res.status(500).send('Ocurrió un error al obtener los conserjes');
   }
 };
-

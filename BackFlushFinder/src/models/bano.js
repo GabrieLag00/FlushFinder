@@ -21,6 +21,10 @@ const Bano = sequelize.define('Bano', {
   },
   Ubicacion: {
     type: DataTypes.STRING(100)
+  },
+  Nombre: { // Nuevo campo agregado
+    type: DataTypes.STRING(50), // Asumiendo que quieres un STRING de hasta 50 caracteres
+    allowNull: true // O false si deseas que sea obligatorio
   }
 }, {
   tableName: 'banos',
