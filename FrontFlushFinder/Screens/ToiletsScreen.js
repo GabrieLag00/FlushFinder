@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, FlatList, 
 import { stylesLogin } from './LoginScreen';
 import { stylesUbication } from './UbicationScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import { getBanosDelEdificio } from '../api';
 
@@ -11,19 +12,37 @@ function Banos({ navigation, route }) {
     const [banos, setBanos] = useState([]);
     const [selectedBano, setSelectedBano] = useState(null); // Cambiado para manejar el baño seleccionado
     const [modalVisible, setModalVisible] = useState(false);
+    const [userGender, setUserGender] = useState(null);
+
+    useEffect(() => {
+        // Recuperar el género del usuario de AsyncStorage
+        const fetchUserGender = async () => {
+            const userDataJson = await AsyncStorage.getItem('userData');
+            const userData = JSON.parse(userDataJson);
+            setUserGender(userData.usuario.genero); // Asegúrate de que el género esté almacenado correctamente
+        };
+
+        fetchUserGender();
+    }, []);
+
 
     useEffect(() => {
         const cargarBanos = async () => {
             try {
                 const data = await getBanosDelEdificio(edificioId);
-                setBanos(data);
+                // Filtrar los baños basados en el género del usuario
+                const filteredBanos = data.filter(bano => bano.Genero === userGender);
+                setBanos(filteredBanos);
             } catch (error) {
                 console.error("Error al cargar los baños:", error);
             }
         };
 
-        cargarBanos();
-    }, [edificioId]);
+        if (userGender) {
+            cargarBanos();
+        }
+    }, [edificioId, userGender]);
+    
 
 
     const options = [
@@ -40,6 +59,20 @@ function Banos({ navigation, route }) {
     return (
         <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
         <Header navigation={navigation} />
+
+        <FlatList
+                data={options}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                    <View style={stylesToilets.option}>
+                        <TouchableOpacity>
+                            <Text style={stylesToilets.optionText}>{item.label}</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+                keyExtractor={(item) => item.id.toString()}
+            />
 
         {/* Aquí iría tu FlatList de opciones si aún necesitas incluirla */}
 

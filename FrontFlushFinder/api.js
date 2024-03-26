@@ -2,11 +2,11 @@ import axios from 'axios';
 
 
 
-const API_URL_EDIFICIOS = 'http://192.168.1.83:5000/api/edificios/edificios';
-const API_URL_LOGIN_CONSERJES = 'http://192.168.1.83:5000/api/conserjes/login';
-const API_URL_CONSERJES = "http://192.168.1.83:5000/api/conserjes/conserjes";
-const API_URL_REGISTRO = 'http://192.168.1.83:5000/api/users/register';
-const API_URL_LOGIN = 'http://192.168.1.83:5000/api/users/login';
+const API_URL_EDIFICIOS = 'http://192.168.100.18:5000/api/edificios/edificios';
+const API_URL_LOGIN_CONSERJES = 'http://192.168.100.18:5000/api/conserjes/login';
+const API_URL_CONSERJES = "http://192.168.100.18:5000/api/conserjes/conserjes";
+const API_URL_REGISTRO = 'http://192.168.100.18:5000/api/users/register';
+const API_URL_LOGIN = 'http://192.168.100.18:5000/api/users/login';
 
 
 
@@ -70,7 +70,7 @@ export const LoginConserje = async (credenciales) => {
 };
 
 export const getBanosDelEdificio = async (edificioId) => {
-  const urlBanos = `http://192.168.1.83:5000/api/banos/edificios/${edificioId}/banos`;
+  const urlBanos = `http://192.168.100.18:5000/api/banos/edificios/${edificioId}/banos`;
   try {
     const response = await axios.get(urlBanos);
     return response.data;

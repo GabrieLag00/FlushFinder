@@ -29,6 +29,7 @@ function GenderSelector({ navigation, route }) {
             usuario: {
                 nombre: response.usuario.nombre,
                 email: response.usuario.email,
+                genero: response.usuario.genero,
             }
         };
 

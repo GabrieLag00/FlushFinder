@@ -38,6 +38,7 @@ function LoginScreen({ navigation }) {
             usuario: {
                 nombre: response.usuario.nombre,
                 email: response.usuario.email,
+                genero: response.usuario.genero,
             }
         };
         // Guardar el token y los datos de usuario en AsyncStorage
@@ -96,7 +97,7 @@ function LoginScreen({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Regístrate aquí</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Api')}>
+        <TouchableOpacity onPress={() => navigation.navigate('ConserjeLogin')}>
           <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Login de conserje</Text>
         </TouchableOpacity>
       </View>
