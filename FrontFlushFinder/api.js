@@ -58,7 +58,7 @@ export const loginUsuario = async (credenciales) => {
   }
 };
 
-export const LoginConserje = async (credenciales) => {
+export const loginConserje = async (credenciales) => {
   try {
     // Envía las credenciales al servidor
     const response = await axios.post(API_URL_LOGIN_CONSERJES, credenciales);

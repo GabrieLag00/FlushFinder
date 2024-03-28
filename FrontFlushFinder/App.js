@@ -10,6 +10,9 @@ import ApiScreen from './Screens/ApiScreen'
 import SosScreen from './Screens/SosScreen';
 import DashboardScreen from './Screens/DashboardScreen';
 import LoginConserje from './Screens/LoginConserje';
+import HomeConserje from './Screens/HomeConserje';
+import HomeBuildings from './Screens/HomeBuildings';
+import HomeAlerts from './Screens/HomeAlerts';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +28,11 @@ function App() {
         <Stack.Screen name="Sos" component={SosScreen} />
         <Stack.Screen name="Api" component={ApiScreen} />
         <Stack.Screen name="Dashboard" component={DashboardScreen} />
+         
         <Stack.Screen name="ConserjeLogin" component={LoginConserje}/>
+        <Stack.Screen name="HomeConserje" component={HomeConserje}/>
+        <Stack.Screen name="HomeBuildings" component={HomeBuildings}/>
+        <Stack.Screen name="HomeAlerts" component={HomeAlerts}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

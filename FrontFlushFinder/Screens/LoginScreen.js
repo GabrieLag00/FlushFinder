@@ -51,7 +51,10 @@ function LoginScreen({ navigation }) {
         Alert.alert("Inicio de sesión fallido", "Verifica tus credenciales.");
       }
     } catch (error) {
-      if (error instanceof z.ZodError) {
+      if (error.response) {
+        // Muestra el mensaje de error específico devuelto por el backend
+        Alert.alert("Error en el inicio de sesión", error.response.data.message);
+      } else if (error instanceof z.ZodError) {
         const formErrors = error.errors.reduce((acc, curr) => {
           acc[curr.path[0]] = curr.message;
           return acc;

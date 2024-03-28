@@ -19,7 +19,7 @@ export const loginConserje = async (req, res) => {
     }
 
     // Comparar la contraseña ingresada con la almacenada en la base de datos
-    const contrasenaValida = bcrypt.compareSync(datosValidados.contrasena, conserje.Contrasena); // Asumiendo que el campo de la contraseña en el modelo es Contrasena
+    const contrasenaValida = bcrypt.compareSync(datosValidados.contrasena, conserje.Contrasena);
 
     if (!contrasenaValida) {
       return res.status(401).json({ message: "Contraseña inválida." });
@@ -32,7 +32,14 @@ export const loginConserje = async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    res.json({ message: "Login exitoso", token, conserjeId: conserje.ConserjeID });
+    // Incluir nombre y matrícula en la respuesta
+    res.json({
+      message: "Login exitoso",
+      token,
+      conserjeId: conserje.ConserjeID,
+      nombre: conserje.Nombre, // Agrega el nombre del conserje a la respuesta
+      matricula: conserje.Matricula // Agrega la matrícula del conserje a la respuesta
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       // Manejar errores de validación de Zod
@@ -43,6 +50,7 @@ export const loginConserje = async (req, res) => {
     res.status(500).json({ message: "Error al iniciar sesión" });
   }
 };
+
 
 export const obtenerConserjes = async (req, res) => {
   try {
