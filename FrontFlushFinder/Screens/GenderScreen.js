@@ -37,8 +37,10 @@ function GenderSelector({ navigation, route }) {
         await AsyncStorage.setItem('userData', JSON.stringify(userData));
         await AsyncStorage.setItem('isLoggedIn', 'true');
 
-        // Navega a la pantalla Ubication
-        navigation.navigate('Ubication');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Ubication' }], // Cambia 'Ubication' por la pantalla a la que quieres ir.
+        });
         Alert.alert("Registro exitoso", "Tu cuenta ha sido creada.");
       } else {
         // Si no se obtiene un token, muestra un mensaje de error

@@ -29,7 +29,11 @@ function LoginConserje({navigation}) {
           matricula: response.matricula
         }));
   
-        navigation.navigate('HomeConserje');
+        
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'HomeConserje' }],
+        });
       } else {
         Alert.alert('Error', 'Inicio de sesión incorrecto');
       }

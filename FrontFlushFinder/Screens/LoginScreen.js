@@ -45,8 +45,10 @@ function LoginScreen({ navigation }) {
         await AsyncStorage.setItem('userData', JSON.stringify(userData));
         await AsyncStorage.setItem('isLoggedIn', 'true');
   
-        // Redirigir a la pantalla "Ubication"
-        navigation.navigate('Ubication');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Ubication' }], // Cambia 'Ubication' por la pantalla a la que quieres ir.
+        });
       } else {
         Alert.alert("Inicio de sesión fallido", "Verifica tus credenciales.");
       }

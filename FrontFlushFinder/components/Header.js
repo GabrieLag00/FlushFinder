@@ -24,7 +24,10 @@ function Header({ navigation }) {
 
   const handleLogout = async () => {
     await AsyncStorage.multiRemove(['userData', 'isLoggedIn', 'conserjeData', 'conserjeToken']);
-    navigation.navigate('Login');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
   };
   
   return (
