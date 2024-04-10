@@ -5,7 +5,7 @@ import { loginConserje } from '../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-function LoginConserje({navigation}) {
+function LoginConserje({ navigation }) {
   const [matricula, setMatricula] = useState('');
   const [contrasena, setContrasena] = useState('');
 
@@ -18,7 +18,7 @@ function LoginConserje({navigation}) {
         Alert.alert("Error", "La matrícula debe ser un número.");
         return;
       }
-  
+
       const response = await loginConserje({ matricula: matriculaNumerica, contrasena });
       if (response.token) {
         // Almacenar el token y los datos de sesión específicos del conserje
@@ -28,11 +28,12 @@ function LoginConserje({navigation}) {
           nombre: response.nombre,
           matricula: response.matricula
         }));
-  
-        
+
+
         navigation.reset({
           index: 0,
-          routes: [{ name: 'HomeConserje' }],
+          //routes: [{ name: 'HomeConserje' }],//
+          routes: [{ name: 'Dashboard' }],
         });
       } else {
         Alert.alert('Error', 'Inicio de sesión incorrecto');
@@ -42,7 +43,7 @@ function LoginConserje({navigation}) {
       Alert.alert('Error', 'No se pudo iniciar sesión :(');
     }
   };
-  
+
 
   return (
     <View style={stylesLogin.container}>
@@ -66,7 +67,7 @@ function LoginConserje({navigation}) {
         value={contrasena}
       />
 
-     <View style={stylesLogin.buttonContainer}>
+      <View style={stylesLogin.buttonContainer}>
         <TouchableOpacity style={stylesLogin.button} onPress={handleLogin}>
           <Text style={stylesLogin.buttonText}>Iniciar sesión</Text>
         </TouchableOpacity>
@@ -78,7 +79,7 @@ function LoginConserje({navigation}) {
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Regístrate aquí</Text>
         </TouchableOpacity>
-      </View>  
+      </View>
     </View>
   );
 }

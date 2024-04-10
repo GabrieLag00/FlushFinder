@@ -40,7 +40,7 @@ function Header({ navigation }) {
         />
         {isActive && (
           <TouchableOpacity style={stylesHeader.overlay} onPress={handleLogout}>
-            <Text style={stylesHeader.logoutText}>Logout</Text>
+            <Text style={stylesHeader.logoutText}>Salir</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -61,7 +61,7 @@ export const stylesHeader = StyleSheet.create({
   ContainerUserInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'green'
+    //backgroundColor: 'green'//
   },
   userPhoto: {
     width: 70,
@@ -99,10 +99,12 @@ export const stylesHeader = StyleSheet.create({
     backgroundColor: 'rgba(255, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 50,
   },
   logoutText: {
     color: 'white',
     fontSize: 20,
+    fontWeight: 'bold',
   },
 
 
