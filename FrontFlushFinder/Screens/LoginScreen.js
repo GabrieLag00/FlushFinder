@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 /*import fontSizes from '../styles/ClassStyle';*/
 import { loginUsuario } from '../api';
-import {z} from 'zod';
+import { z } from 'zod';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginSchema = z.object({
@@ -34,24 +34,29 @@ function LoginScreen({ navigation }) {
       if (response.token && response.usuario) {
         // Datos de usuario y token
         const userData = {
-            token: response.token,
-            usuario: {
-                nombre: response.usuario.nombre,
-                email: response.usuario.email,
-                genero: response.usuario.genero,
-            }
+          token: response.token,
+          usuario: {
+            nombre: response.usuario.nombre,
+            email: response.usuario.email,
+            genero: response.usuario.genero,
+          }
         };
         // Guardar el token y los datos de usuario en AsyncStorage
         await AsyncStorage.setItem('userData', JSON.stringify(userData));
         await AsyncStorage.setItem('isLoggedIn', 'true');
-  
-        // Redirigir a la pantalla "Ubication"
-        navigation.navigate('Ubication');
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Ubication' }], // Cambia 'Ubication' por la pantalla a la que quieres ir.
+        });
       } else {
         Alert.alert("Inicio de sesión fallido", "Verifica tus credenciales.");
       }
     } catch (error) {
-      if (error instanceof z.ZodError) {
+      if (error.response) {
+        // Muestra el mensaje de error específico devuelto por el backend
+        Alert.alert("Error en el inicio de sesión", error.response.data.message);
+      } else if (error instanceof z.ZodError) {
         const formErrors = error.errors.reduce((acc, curr) => {
           acc[curr.path[0]] = curr.message;
           return acc;
@@ -93,19 +98,34 @@ function LoginScreen({ navigation }) {
       
 
       <View style={stylesLogin.ligaContainer}>
-        <Text style={stylesLogin.ligaText}>¿No tienes cuenta?</Text>
-        <View style={stylesLogin.viewSpace}></View>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Regístrate aquí</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Api')}>
-          <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Api aquí</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('ConserjeLogin')}>
-          <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Login de conserje</Text>
+
+        <View>
+          <View style={stylesLogin.viewFlex}>
+            <Text style={stylesLogin.ligaText}>¿No tienes cuenta?</Text>
+            <View style={stylesLogin.viewSpace} />
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+              <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Regístrate aquí</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={stylesLogin.viewFlex}>
+            <Text style={stylesLogin.ligaText}>¿Eres un conserje?</Text>
+            <View style={stylesLogin.viewSpace} />
+            <TouchableOpacity onPress={() => navigation.navigate('ConserjeLogin')}>
+              <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Inicia sesión aquí</Text>
+            </TouchableOpacity>
+          </View>
+
+        </View>
+
+      </View>
+
+      <View style={stylesLogin.buttonContainer}>
+        <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('Dashboard')}>
+          <Text style={stylesLogin.buttonText}>Dashboard</Text>
         </TouchableOpacity>
       </View>
-      
+
     </View>
   );
 }
@@ -172,6 +192,9 @@ export const stylesLogin = StyleSheet.create({
   viewSpace: {
     paddingLeft: 5,
     paddingRight: 5,
+  },
+  viewFlex: {
+    flexDirection: 'row',
   },
 
 });

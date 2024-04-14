@@ -4,54 +4,52 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function Header({ navigation }) {
-  const [user, setUser] = useState({ name: 'Cargando...', email: 'Cargando...' });
-
+  const [userDetails, setUserDetails] = useState({ name: 'Cargando...', detail: 'Cargando...' });
   const [isActive, setIsActive] = useState(false);
-  const handlePress = () => {
-    setIsActive(!isActive);
-  };
 
   useEffect(() => {
     const fetchUserData = async () => {
       const userDataString = await AsyncStorage.getItem('userData');
+      const conserjeDataString = await AsyncStorage.getItem('conserjeData');
       if (userDataString) {
         const userData = JSON.parse(userDataString);
-        setUser({ name: userData.usuario.nombre, email: userData.usuario.email });
+        setUserDetails({ name: userData.usuario.nombre, detail: userData.usuario.email });
+      } else if (conserjeDataString) {
+        const conserjeData = JSON.parse(conserjeDataString);
+        setUserDetails({ name: conserjeData.nombre, detail: `Matrícula: ${conserjeData.matricula}` });
       }
     };
-
     fetchUserData();
   }, []);
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('userData');
-    await AsyncStorage.removeItem('isLoggedIn');
-    navigation.navigate('Login');
+    await AsyncStorage.multiRemove(['userData', 'isLoggedIn', 'conserjeData', 'conserjeToken']);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
   };
-
+  
   return (
     <View style={stylesHeader.ContainerUserInfo}>
-      <TouchableOpacity onPress={handlePress}>
-        <View style={stylesHeader.container}>
-          <Image
-            source={require('../images/FlushFinder-logo-white.png')}
-            style={stylesHeader.logo}
-          />
-          {isActive && (
-            <TouchableOpacity style={stylesHeader.overlay} onPress={handleLogout}>
-              <Text style={stylesHeader.logoutText}>
-                LogOut
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </TouchableOpacity>
-
-      <View style={stylesHeader.userInfoText}>
-        <Text style={stylesHeader.userName}>{user.name}</Text>
-        <Text style={stylesHeader.userEmail}>{user.email}</Text>
+    <TouchableOpacity onPress={() => setIsActive(!isActive)}>
+      <View style={stylesHeader.container}>
+        <Image
+          source={require('../images/FlushFinder-logo-white.png')}
+          style={stylesHeader.logo}
+        />
+        {isActive && (
+          <TouchableOpacity style={stylesHeader.overlay} onPress={handleLogout}>
+            <Text style={stylesHeader.logoutText}>Salir</Text>
+          </TouchableOpacity>
+        )}
       </View>
+    </TouchableOpacity>
+    <View style={stylesHeader.userInfoText}>
+      <Text style={stylesHeader.userName}>{userDetails.name}</Text>
+      <Text style={stylesHeader.userEmail}>{userDetails.detail}</Text>
     </View>
+  </View>
   );
 }
 
@@ -63,7 +61,7 @@ export const stylesHeader = StyleSheet.create({
   ContainerUserInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'green'
+    //backgroundColor: 'green'//
   },
   userPhoto: {
     width: 70,
@@ -101,10 +99,12 @@ export const stylesHeader = StyleSheet.create({
     backgroundColor: 'rgba(255, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 50,
   },
   logoutText: {
     color: 'white',
     fontSize: 20,
+    fontWeight: 'bold',
   },
 
 

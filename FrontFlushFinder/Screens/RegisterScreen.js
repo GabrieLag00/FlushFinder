@@ -99,8 +99,9 @@ function RegisterScreen({ navigation }) {
   
       <View style={stylesLogin.ligaContainer}>
         <Text style={stylesLogin.ligaText}>¿Ya tienes cuenta?</Text>
+        <View style={stylesLogin.viewSpace} />
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Inicia aquí</Text>
+          <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Inicia sesión aquí</Text>
         </TouchableOpacity>
       </View>
     </View>

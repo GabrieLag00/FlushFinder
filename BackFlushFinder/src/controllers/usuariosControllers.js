@@ -67,9 +67,13 @@ export const loginUsuario = async (req, res) => {
     // Buscar al usuario por email
     const usuario = await Usuario.findOne({ where: { email: datosValidados.email } });
     
+    if (!usuario) {
+      return res.status(404).json({ message: "Correo electrónico no existe, por favor regístrate." });
+    }
+
     // Verificar si el usuario existe y la contraseña es correcta
     if (!usuario || !bcrypt.compareSync(datosValidados.contrasena, usuario.contrasena)) {
-      return res.status(401).json({ message: "Correo electrónico o contraseña inválidos." });
+      return res.status(401).json({ message: "Contraseña Incorrecta" });
     }
 
     // Generar el token JWT
