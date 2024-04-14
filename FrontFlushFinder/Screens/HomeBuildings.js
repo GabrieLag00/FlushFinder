@@ -3,6 +3,10 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView,Modal, Butt
 import { stylesLogin } from './LoginScreen';
 import Header from '../components/Header';
 import {getEdificios} from '../api'
+import io from 'socket.io-client';
+
+const socket = io("http://localhost:8765");
+
 
 function HomeBuilldings ({ navigation }) {
   const [edificios, setEdificios] = useState([]);
@@ -11,7 +15,13 @@ function HomeBuilldings ({ navigation }) {
 
   const handleMaintenanceSelection = (selection) => {
     console.log(`Poner ${selectedEdificio.Nombre} en mantenimiento: ${selection}`);
-    // Aquí puedes añadir la lógica para marcar el edificio en mantenimiento
+
+    // Aquí emites el evento al servidor con detalles adicionales
+    socket.emit('deshabilitar-edificio', { 
+      edificioId: selectedEdificio.EdificioID,
+      mantenimiento: selection // 'Hombres', 'Mujeres', 'Ambos'
+    });
+
     setModalVisible(false); // Cierra el modal tras hacer la selección
   };
 
@@ -27,6 +37,25 @@ function HomeBuilldings ({ navigation }) {
 
     cargarEdificios();
   }, []);
+
+  useEffect(() => {
+    // Escucha el evento de edificio deshabilitado
+    socket.on('edificio-deshabilitado', ({ edificioId }) => {
+        const edificiosActualizados = edificios.map(edificio => {
+          if (edificio.EdificioID === edificioId) {
+            return { ...edificio, Disponibilidad: 'no disponible' }; // Asume que tienes un campo de Disponibilidad en tu estado de edificios
+          }
+          return edificio;
+        });
+
+        setEdificios(edificiosActualizados);
+        Alert.alert("Edificio Deshabilitado", `El edificio ha sido puesto en mantenimiento.`);
+    });
+
+    return () => {
+        socket.off('edificio-deshabilitado');
+    };
+}, [edificios]);
 
   const images = [
     require('../images/ut/ut a.jpg'),
