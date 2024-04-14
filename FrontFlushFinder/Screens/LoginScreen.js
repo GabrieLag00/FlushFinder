@@ -90,12 +90,16 @@ function LoginScreen({ navigation }) {
           <Text style={stylesLogin.buttonText}>Iniciar sesión</Text>
         </TouchableOpacity>
       </View>
+      
 
       <View style={stylesLogin.ligaContainer}>
         <Text style={stylesLogin.ligaText}>¿No tienes cuenta?</Text>
         <View style={stylesLogin.viewSpace}></View>
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Regístrate aquí</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Api')}>
+          <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Api aquí</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('ConserjeLogin')}>
           <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Login de conserje</Text>
