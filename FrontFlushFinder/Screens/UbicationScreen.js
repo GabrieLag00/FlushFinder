@@ -1,8 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { stylesLogin } from './LoginScreen';
 import Header from '../components/Header';
 import {getEdificios} from '../api'
+import io from 'socket.io-client';
+
+const socket = io("http://localhost:8765");
 
 function Ubicacion({ navigation }) {
   const [edificios, setEdificios] = useState([]);
@@ -18,7 +21,38 @@ function Ubicacion({ navigation }) {
     };
 
     cargarEdificios();
+    // Escuchar eventos de disponibilidad de edificios
+    socket.on('edificio-deshabilitado', ({ edificioId }) => {
+      updateEdificioDisponibilidad(edificioId, 'no disponible');
+    });
+
+    socket.on('edificio-habilitado', ({ edificioId }) => {
+      updateEdificioDisponibilidad(edificioId, 'disponible');
+    });
+
+    return () => {
+      socket.off('edificio-deshabilitado');
+      socket.off('edificio-habilitado');
+    };
   }, []);
+
+  const updateEdificioDisponibilidad = (edificioId, disponibilidad) => {
+    const updatedEdificios = edificios.map(edificio => {
+      if (edificio.EdificioID === edificioId) {
+        return { ...edificio, Disponibilidad: disponibilidad };
+      }
+      return edificio;
+    });
+    setEdificios(updatedEdificios);
+  };
+
+  const handleSelectEdificio = (edificio) => {
+    if (edificio.Disponibilidad === 'no disponible') {
+      Alert.alert("Acceso Denegado", `El baño de este edificio (${edificio.Nombre}) está en mantenimiento. Por favor, busca otro baño.`);
+    } else {
+      navigation.navigate('Toilets', { edificioId: edificio.EdificioID });
+    }
+  };
 
   const images = [
     require('../images/ut/ut a.jpg'),
@@ -41,8 +75,7 @@ function Ubicacion({ navigation }) {
     <View style={stylesUbication.rowContainer}>
       {edificios.map((edificio, index) => (
         <View key={edificio.EdificioID} style={stylesUbication.itemContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('Toilets', { edificioId: edificio.EdificioID })}>
-            {/* Asegúrate de que el índice no exceda el tamaño del array de imágenes */}
+          <TouchableOpacity onPress={() => handleSelectEdificio(edificio)}>
             <Image source={images[index % images.length]} style={stylesUbication.image} />
             <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{edificio.Nombre}</Text>
           </TouchableOpacity>

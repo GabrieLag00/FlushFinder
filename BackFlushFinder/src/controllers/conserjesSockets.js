@@ -21,5 +21,16 @@ export const habilitarManejoEdificios = (io) => {
           socket.emit('error-deshabilitando', { mensaje: 'Error al deshabilitar el edificio.' });
         }
       });
+        // Nuevo evento para re-habilitar el edificio
+        socket.on('habilitar-edificio', async ({ edificioId }) => {
+          try {
+              await Edificio.update({ Disponibilidad: 'disponible' }, { where: { EdificioID: edificioId } });
+              io.emit('edificio-habilitado', { edificioId });
+              console.log(`Edificio ${edificioId} habilitado por el conserje ${socket.id}`);
+          } catch (error) {
+              console.error('Error al habilitar el edificio:', error);
+              socket.emit('error-habilitando', { mensaje: 'Error al habilitar el edificio.' });
+          }
+        });      
     });
 };
