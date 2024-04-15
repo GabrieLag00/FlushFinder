@@ -17,11 +17,12 @@
     },
     "production": {
       "username": "root",
-      "password": "",
-      "database": "banointeligente",
-      "host": "127.0.0.1",
-      "port": 3306,
-      "dialect": "mysql"
+    "password": "UVxsrBLbhIJwwMLnfAclyaiaGtnrzHAJ",
+    "database": "railway",
+    "host": "viaduct.proxy.rlwy.net",
+    "port": 53744,
+    "dialect": "mysql",
+    "logging": false
       
     }
   }

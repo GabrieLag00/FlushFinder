@@ -16,6 +16,7 @@ import HomeAlerts from './Screens/HomeAlerts';
 import DashboardBuildings from './Screens/Dashboard/DashboardBuildings';
 import DashboardSos from './Screens/Dashboard/DashboardSos';
 import Maintenance from './components/Maintenance';
+import ButtonDisable from './components/ButtonDisable';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ function App() {
         <Stack.Screen name="HomeBuildings" component={HomeBuildings}/>
         <Stack.Screen name="HomeAlerts" component={HomeAlerts}/>
         <Stack.Screen name="Mantenimiento" component={Maintenance}/>
+        <Stack.Screen name="test" component={ButtonDisable}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

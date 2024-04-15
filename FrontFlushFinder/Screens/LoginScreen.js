@@ -95,6 +95,7 @@ function LoginScreen({ navigation }) {
           <Text style={stylesLogin.buttonText}>Iniciar sesión</Text>
         </TouchableOpacity>
       </View>
+      
 
       <View style={stylesLogin.ligaContainer}>
 
@@ -122,6 +123,12 @@ function LoginScreen({ navigation }) {
       <View style={stylesLogin.buttonContainer}>
         <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('Dashboard')}>
           <Text style={stylesLogin.buttonText}>Dashboard</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={stylesLogin.buttonContainer}>
+        <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('test')}>
+          <Text style={stylesLogin.buttonText}>test</Text>
         </TouchableOpacity>
       </View>
 

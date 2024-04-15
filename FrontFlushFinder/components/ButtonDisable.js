@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Modal, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { stylesUbication } from '../Screens/UbicationScreen';
-
+import { getEdificios } from '../api';
 
 function ButtonDisable({ navigation }) {
+  const [edificios, setEdificios] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEdificio, setSelectedEdificio] = useState(null);
 
@@ -14,13 +15,26 @@ function ButtonDisable({ navigation }) {
     setModalVisible(false); // Cierra el modal tras hacer la selección
   };
 
+  useEffect(() => {
+    const cargarEdificios = async () => {
+      try {
+        const data = await getEdificios();
+        setEdificios(data);
+      } catch (error) {
+        console.error("Error al cargar los edificios:", error);
+      }
+    };
+
+    cargarEdificios();
+  }, []);
+
   return (
     <>
-      <View>
+      <View style={stylesButtonDisable.containerButtonDisable}>
         <TouchableOpacity
-          onPress={() => { setSelectedEdificio(edificio); setModalVisible(true); }}
+          onPress={() => { setSelectedEdificio(edificios); setModalVisible(true); }}
           style={stylesButtonDisable.maintenanceButton}>
-          <Text style={stylesButtonDisable.maintenanceButtonText}>Poner en mantenimiento</Text>
+          <Text style={stylesButtonDisable.maintenanceButtonText}>Mantenimiento 🛠️</Text>
         </TouchableOpacity>
       </View>
 
@@ -30,8 +44,8 @@ function ButtonDisable({ navigation }) {
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
-        }}
-      >
+        }}>
+
         <View style={stylesButtonDisable.centeredView}>
           <View style={stylesButtonDisable.modalView}>
             <Text style={stylesButtonDisable.modalText}>Selecciona qué baños poner en mantenimiento:</Text>
@@ -49,6 +63,9 @@ function ButtonDisable({ navigation }) {
 }
 
 export const stylesButtonDisable = StyleSheet.create({
+  containerButtonDisable: {
+    marginVertical: 20,
+  },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
@@ -76,10 +93,11 @@ export const stylesButtonDisable = StyleSheet.create({
   },
 
   maintenanceButton: {
-    marginTop: 10,
-    backgroundColor: 'orange', // O el color que prefieras
-    padding: 10,
+    paddingVertical: 30,
+    backgroundColor: '#F69A10',
     borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   maintenanceButtonText: {
     color: '#FFFFFF',

@@ -4,6 +4,8 @@ import { stylesToilets } from './ToiletsScreen';
 import { stylesUbication } from './UbicationScreen';
 import { stylesLogin } from './LoginScreen';
 import Header from '../components/Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import io from 'socket.io-client';
 
 function SosScreen({ navigation }) {
   const imageReturn = require('../images/return.png');

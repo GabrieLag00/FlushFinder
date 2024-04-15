@@ -29,27 +29,27 @@ function Header({ navigation }) {
       routes: [{ name: 'Login' }],
     });
   };
-  
+
   return (
     <View style={stylesHeader.ContainerUserInfo}>
-    <TouchableOpacity onPress={() => setIsActive(!isActive)}>
-      <View style={stylesHeader.container}>
-        <Image
-          source={require('../images/FlushFinder-logo-white.png')}
-          style={stylesHeader.logo}
-        />
-        {isActive && (
-          <TouchableOpacity style={stylesHeader.overlay} onPress={handleLogout}>
-            <Text style={stylesHeader.logoutText}>Salir</Text>
-          </TouchableOpacity>
-        )}
+      <TouchableOpacity onPress={() => setIsActive(!isActive)}>
+        <View style={stylesHeader.container}>
+          <Image
+            source={require('../images/FlushFinder-logo-white.png')}
+            style={stylesHeader.logo}
+          />
+          {isActive && (
+            <TouchableOpacity style={stylesHeader.overlay} onPress={handleLogout}>
+              <Text style={stylesHeader.logoutText}>Salir</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </TouchableOpacity>
+      <View style={stylesHeader.userInfoText}>
+        <Text style={stylesHeader.userName}>{userDetails.name}</Text>
+        <Text style={stylesHeader.userEmail}>{userDetails.detail}</Text>
       </View>
-    </TouchableOpacity>
-    <View style={stylesHeader.userInfoText}>
-      <Text style={stylesHeader.userName}>{userDetails.name}</Text>
-      <Text style={stylesHeader.userEmail}>{userDetails.detail}</Text>
     </View>
-  </View>
   );
 }
 
@@ -61,6 +61,7 @@ export const stylesHeader = StyleSheet.create({
   ContainerUserInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: 40,
     //backgroundColor: 'green'//
   },
   userPhoto: {
