@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Modal, Button } from 'react-native';
-import { stylesLogin } from './LoginScreen';
-import Header from '../components/Header';
-import { getEdificios } from '../api'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Modal, Button } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { stylesUbication } from '../Screens/UbicationScreen';
 
-function HomeBuilldings({ navigation }) {
-  const [edificios, setEdificios] = useState([]);
+
+function ButtonDisable({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEdificio, setSelectedEdificio] = useState(null);
 
@@ -15,54 +14,16 @@ function HomeBuilldings({ navigation }) {
     setModalVisible(false); // Cierra el modal tras hacer la selección
   };
 
-  useEffect(() => {
-    const cargarEdificios = async () => {
-      try {
-        const data = await getEdificios();
-        setEdificios(data);
-      } catch (error) {
-        console.error("Error al cargar los edificios:", error);
-      }
-    };
-
-    cargarEdificios();
-  }, []);
-
-  const images = [
-    require('../images/ut/ut a.jpg'),
-    require('../images/ut/ut b.jpg'),
-    require('../images/ut/ut c.jpg'),
-    require('../images/ut/ut d.jpg'),
-    require('../images/ut/ut e.jpg'),
-    require('../images/ut/ut f.jpg'),
-    require('../images/ut/ut g.jpg'),
-    require('../images/ut/ut h.jpg'),
-    require('../images/ut/ut k.jpg'),
-    require('../images/ut/ut m.jpg'),
-  ];
-
-
   return (
-    <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
-      <Header navigation={navigation} />
-      <Text style={[stylesLogin.title, stylesUbication.titleUbication]}>Selecciona tu ubicación</Text>
-      <View style={stylesUbication.rowContainer}>
-        {edificios.map((edificio, index) => (
-          <View key={edificio.EdificioID} style={stylesUbication.itemContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate('HomeAlerts')}>
-              {/* Asegúrate de que el índice no exceda el tamaño del array de imágenes */}
-              <Image source={images[index % images.length]} style={stylesUbication.image} />
-              <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{edificio.Nombre}</Text>
-            </TouchableOpacity>
-            {/* Botón para poner en mantenimiento */}
-            <TouchableOpacity
-              onPress={() => { setSelectedEdificio(edificio); setModalVisible(true); }}
-              style={stylesUbication.maintenanceButton}>
-              <Text style={stylesUbication.maintenanceButtonText}>Poner en mantenimiento</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
+    <>
+      <View>
+        <TouchableOpacity
+          onPress={() => { setSelectedEdificio(edificio); setModalVisible(true); }}
+          style={stylesButtonDisable.maintenanceButton}>
+          <Text style={stylesButtonDisable.maintenanceButtonText}>Poner en mantenimiento</Text>
+        </TouchableOpacity>
       </View>
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -71,9 +32,9 @@ function HomeBuilldings({ navigation }) {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={stylesUbication.centeredView}>
-          <View style={stylesUbication.modalView}>
-            <Text style={stylesUbication.modalText}>Selecciona qué baños poner en mantenimiento:</Text>
+        <View style={stylesButtonDisable.centeredView}>
+          <View style={stylesButtonDisable.modalView}>
+            <Text style={stylesButtonDisable.modalText}>Selecciona qué baños poner en mantenimiento:</Text>
             <Button title="Hombres" onPress={() => handleMaintenanceSelection('Hombres')} />
             <Button title="Mujeres" onPress={() => handleMaintenanceSelection('Mujeres')} />
             <Button title="Ambos" onPress={() => handleMaintenanceSelection('Ambos')} />
@@ -81,13 +42,13 @@ function HomeBuilldings({ navigation }) {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+
+    </>
+
   );
 }
 
-export default HomeBuilldings;
-
-export const stylesUbication = StyleSheet.create({
+export const stylesButtonDisable = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
@@ -167,3 +128,5 @@ export const stylesUbication = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default ButtonDisable;

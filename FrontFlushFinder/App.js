@@ -15,6 +15,7 @@ import HomeBuildings from './Screens/HomeBuildings';
 import HomeAlerts from './Screens/HomeAlerts';
 import DashboardBuildings from './Screens/Dashboard/DashboardBuildings';
 import DashboardSos from './Screens/Dashboard/DashboardSos';
+import Maintenance from './components/Maintenance';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,7 @@ function App() {
         <Stack.Screen name="HomeConserje" component={HomeConserje}/>
         <Stack.Screen name="HomeBuildings" component={HomeBuildings}/>
         <Stack.Screen name="HomeAlerts" component={HomeAlerts}/>
+        <Stack.Screen name="Mantenimiento" component={Maintenance}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
