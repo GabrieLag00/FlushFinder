@@ -6,6 +6,7 @@ import { connectDB } from './connect.js';
 import '../envConfig.js'; // Asegura que este import esté al principio
 import http from 'http';
 import { habilitarManejoEdificios } from './controllers/conserjesSockets.js';
+import { habilitarManejoSosReports } from './controllers/sosSockets.js';
 
 // Configuración MQTT - Asegúrate de que el URL esté en el formato correcto
 const mqttClient = connect('mqtt://broker.emqx.io:1883');
@@ -39,6 +40,7 @@ httpServerForSocketIO.listen(process.env.SOCKET_IO_PORT, () => {
 });
 //FUNCIONES SOCKETS
 habilitarManejoEdificios(io);
+habilitarManejoSosReports(io);
 
 // Configuración del servidor HTTP con Express
 const server = http.createServer(app);

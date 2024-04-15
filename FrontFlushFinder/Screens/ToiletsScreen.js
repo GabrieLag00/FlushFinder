@@ -113,9 +113,17 @@ function Banos({ navigation, route }) {
                             <Image source={require('../images/jabon.png')} style={stylesToilets.bathImage} />
                             <Text style={stylesToilets.bathStatusText}>62%</Text>
                         </View>
-                        <TouchableOpacity style={stylesToilets.buttonBath} onPress={() => navigation.navigate('Sos')}>
+
+                        <TouchableOpacity
+                            style={stylesToilets.buttonBath}
+                            onPress={() => {
+                            navigation.navigate('Sos', { banoId: selectedBano.BanoID }); // Navegar a SosScreen con BanoID
+                            setModalVisible(false);
+                            }}
+                        >
                             <Text style={stylesToilets.buttonBathText}>Reportar</Text>
                         </TouchableOpacity>
+
                         <TouchableOpacity onPress={() => setModalVisible(false)}>
                             <Text style={stylesToilets.closeButton}>Cerrar</Text>
                         </TouchableOpacity>
