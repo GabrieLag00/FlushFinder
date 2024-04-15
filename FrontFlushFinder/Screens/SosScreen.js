@@ -14,8 +14,10 @@ const socket = io("http://10.10.50.21:8765");
 function SosScreen({ navigation, route }) {
   const imageReturn = require('../images/return.png');
   const [ratingClean, setRatingClean] = useState(0);
-  const [selectedImages, setSelectedImages] = useState({ image1: false, image2: false });
-  const [selectedItems, setSelectedItems] = useState({ noPaper: false, noSoap: false });
+  const [selectedImages, setSelectedImages] = useState({
+    noPaper: false,
+    noSoap: false
+  });
   const [problema, setProblema] = useState('');
   const [comentarios, setComentarios] = useState('');
   const [userData, setUserData] = useState(null);
@@ -24,12 +26,14 @@ function SosScreen({ navigation, route }) {
     setRatingClean(starIndex);
   };
 
-  const toggleItem = (item) => {
-    setSelectedItems(prevState => ({
+
+  const toggleImage = (imageKey) => {
+    setSelectedImages(prevState => ({
       ...prevState,
-      [item]: !prevState[item]
+      [imageKey]: !prevState[imageKey]
     }));
   };
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -42,6 +46,8 @@ function SosScreen({ navigation, route }) {
     fetchUserData();
   }, []);
 
+
+  
   const handleSendSos = async () => {
     if (!userData) {
       Alert.alert("Error", "No se pudo recuperar la información del usuario.");
@@ -49,7 +55,8 @@ function SosScreen({ navigation, route }) {
     }
 
     const sosData = {
-      UsuarioID: userData.UsuarioID,
+      UsuarioID: userData.usuario.usuarioID,  // Usar el usuarioID almacenado
+      BanoID: route.params.banoId, // Asegúrate de que BanoID es pasado como parámetro
       Problema: problema,
       RatingLimpieza: ratingClean,
       Papel: selectedImages.image1,
@@ -78,34 +85,33 @@ function SosScreen({ navigation, route }) {
       <Text style={stylesLogin.title}>Quejas y sugerencias</Text>
 
       <View style={stylesSos.ratingViewContainer}>
-  <Text style={stylesSos.cleanTitle}>Limpieza</Text>
-  <View style={stylesSos.viewRating}>
-    {[1, 2, 3, 4, 5].map((index) => (
-      <TouchableOpacity key={index} onPress={() => setRatingClean(index)} style={stylesSos.starButton}>
-        <Image
-          source={index <= ratingClean ? require('../images/jabon-rating-filled.png') : require('../images/jabon-rating-empty.png')}
-          style={[stylesSos.starImage, { marginBottom: '20%' }]}
-        />
-      </TouchableOpacity>
-    ))}
-  </View>
-
-  <Text style={stylesSos.cleanTitle}>¿El baño no cuenta con?</Text>
-  <View style={stylesSos.viewRating}>
-    <TouchableOpacity onPress={() => setSelectedImages(prevState => ({ ...prevState, image1: !prevState.image1 }))} style={stylesSos.starButton}>
-      <Image
-        source={selectedImages.image1 ? require('../images/papel-higienico-filled.png') : require('../images/papel-higienico.png')}
-        style={stylesSos.starImage}
-      />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => setSelectedImages(prevState => ({ ...prevState, image2: !prevState.image2 }))} style={stylesSos.starButton}>
-      <Image
-        source={selectedImages.image2 ? require('../images/jabon-filled.png') : require('../images/jabon.png')}
-        style={stylesSos.starImage}
-      />
-    </TouchableOpacity>
-  </View>
-</View>
+        <Text style={stylesSos.cleanTitle}>Limpieza</Text>
+        <View style={stylesSos.viewRating}>
+          {[1, 2, 3, 4, 5].map((index) => (
+            <TouchableOpacity key={index} onPress={() => handleStarPress(index)} style={stylesSos.starButton}>
+              <Image
+                source={index <= ratingClean ? require('../images/jabon-rating-filled.png') : require('../images/jabon-rating-empty.png')}
+                style={[stylesSos.starImage, { marginBottom: '20%' }]}
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Text style={stylesSos.cleanTitle}>¿El baño no cuenta con?</Text>
+        <View style={stylesSos.viewRating}>
+          <TouchableOpacity onPress={() => toggleImage('noPaper')} style={stylesSos.starButton}>
+            <Image
+              source={selectedImages.noPaper ? require('../images/papel-higienico-filled.png') : require('../images/papel-higienico.png')}
+              style={stylesSos.starImage}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => toggleImage('noSoap')} style={stylesSos.starButton}>
+            <Image
+              source={selectedImages.noSoap ? require('../images/jabon-filled.png') : require('../images/jabon.png')}
+              style={stylesSos.starImage}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
 
      
      

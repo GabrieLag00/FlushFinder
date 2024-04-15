@@ -5,10 +5,10 @@ import Header from '../components/Header';
 import {getEdificios} from '../api'
 import io from 'socket.io-client';
 
-const socket = io("http://localhost:8765");
+const socket = io("http://10.10.50.21:8765");
 
 function Ubicacion({ navigation }) {
-  const edificios = useEdificios();
+  const [edificios, setEdificios] = useState([]);
 
   useEffect(() => {
     const cargarEdificios = async () => {
