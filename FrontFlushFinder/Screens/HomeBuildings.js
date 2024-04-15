@@ -13,7 +13,6 @@ function HomeBuildings({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEdificio, setSelectedEdificio] = useState(null);
 
-  // Cargar edificios solo una vez al montar el componente
   useEffect(() => {
     const cargarEdificios = async () => {
       try {
@@ -27,26 +26,24 @@ function HomeBuildings({ navigation }) {
     cargarEdificios();
   }, []);
 
-  // Manejar las actualizaciones de disponibilidad de los edificios
   useEffect(() => {
     const handleUpdate = (edificioId, disponibilidad) => {
-      const updatedEdificios = edificios.map(edificio => {
+      setEdificios(currentEdificios => currentEdificios.map(edificio => {
         if (edificio.EdificioID === edificioId) {
           return { ...edificio, Disponibilidad: disponibilidad };
         }
         return edificio;
-      });
-      setEdificios(updatedEdificios);
+      }));
     };
-
+  
     socket.on('edificio-deshabilitado', ({ edificioId }) => handleUpdate(edificioId, 'no disponible'));
     socket.on('edificio-habilitado', ({ edificioId }) => handleUpdate(edificioId, 'disponible'));
-
+  
     return () => {
       socket.off('edificio-deshabilitado');
       socket.off('edificio-habilitado');
     };
-  }, [edificios]);
+  }, []);
 
   const selectEdificio = (edificio) => {
     setSelectedEdificio(edificio);
@@ -83,42 +80,39 @@ function HomeBuildings({ navigation }) {
     require('../images/ut/ut m.jpg'),
   ];
 
-
-
-
   return (
     <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
-      <Header navigation={navigation} />
-      <Text style={[stylesLogin.title, stylesUbication.titleUbication]}>Selecciona tu ubicación</Text>
-      <View style={stylesUbication.rowContainer}>
-        {edificios.map((edificio, index) => (
-          <View key={edificio.EdificioID} style={stylesUbication.itemContainer}>
-            <TouchableOpacity onPress={() => selectEdificio(edificio)}>
-              <Image source={images[index % images.length]} style={stylesUbication.image} />
-              <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{edificio.Nombre}</Text>
-            </TouchableOpacity>
-            <Button title="Poner en mantenimiento" onPress={() => selectEdificio(edificio)} />
-            <Button title="Re-habilitar" onPress={handleReenable} color="green" />
-          </View>
-        ))}
-      </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={stylesUbication.centeredView}>
-          <View style={stylesUbication.modalView}>
-            <Text style={stylesUbication.modalText}>Selecciona qué baños poner en mantenimiento:</Text>
-            <Button title="Hombres" onPress={() => handleMaintenanceSelection('Hombres')} />
-            <Button title="Mujeres" onPress={() => handleMaintenanceSelection('Mujeres')} />
-            <Button title="Ambos" onPress={() => handleMaintenanceSelection('Ambos')} />
-            <Button title="Cancelar" onPress={() => setModalVisible(false)} />
-          </View>
+    <Header navigation={navigation} />
+    <Text style={[stylesLogin.title, stylesUbication.titleUbication]}>Selecciona tu ubicación</Text>
+    <View style={stylesUbication.rowContainer}>
+      {edificios.map((edificio, index) => (
+        <View key={edificio.EdificioID} style={stylesUbication.itemContainer}>
+          <TouchableOpacity onPress={() => selectEdificio(edificio)}>
+            <Image source={images[index % images.length]} style={stylesUbication.image} />
+            <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{edificio.Nombre}</Text>
+          </TouchableOpacity>
+          <Button title="Poner en mantenimiento" onPress={() => selectEdificio(edificio)} />
+          <Button title="Re-habilitar" onPress={handleReenable} color="green" />
         </View>
-      </Modal>
-    </ScrollView>
+      ))}
+    </View>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => setModalVisible(false)}
+    >
+      <View style={stylesUbication.centeredView}>
+        <View style={stylesUbication.modalView}>
+          <Text style={stylesUbication.modalText}>Selecciona qué baños poner en mantenimiento:</Text>
+          <Button title="Hombres" onPress={() => handleMaintenanceSelection('Hombres')} />
+          <Button title="Mujeres" onPress={() => handleMaintenanceSelection('Mujeres')} />
+          <Button title="Ambos" onPress={() => handleMaintenanceSelection('Ambos')} />
+          <Button title="Cancelar" onPress={() => setModalVisible(false)} />
+        </View>
+      </View>
+    </Modal>
+  </ScrollView>
   );
 }
 

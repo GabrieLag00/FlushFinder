@@ -19,7 +19,7 @@ function NavBar({ navigation }) {
     <View style={stylesNavBar.containetNavBar}>
 
       <View style={stylesNavBar.containerIcons}>
-        <TouchableOpacity onPress={() => navigation.navigate('HomeBuildings')}>
+        <TouchableOpacity onPress={() => navigation.navigate('DashboardBuildings')}>
           <Image
             source={require('../images/building.png')}
             style={stylesHeader.logo}
