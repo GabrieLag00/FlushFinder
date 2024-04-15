@@ -9,12 +9,6 @@ function HomeBuilldings({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEdificio, setSelectedEdificio] = useState(null);
 
-  const handleMaintenanceSelection = (selection) => {
-    console.log(`Poner ${selectedEdificio.Nombre} en mantenimiento: ${selection}`);
-    // Aquí puedes añadir la lógica para marcar el edificio en mantenimiento
-    setModalVisible(false); // Cierra el modal tras hacer la selección
-  };
-
   useEffect(() => {
     const cargarEdificios = async () => {
       try {
@@ -27,6 +21,47 @@ function HomeBuilldings({ navigation }) {
 
     cargarEdificios();
   }, []);
+
+  useEffect(() => {
+    const handleUpdate = (edificioId, disponibilidad) => {
+      setEdificios(currentEdificios => currentEdificios.map(edificio => {
+        if (edificio.EdificioID === edificioId) {
+          return { ...edificio, Disponibilidad: disponibilidad };
+        }
+        return edificio;
+      }));
+    };
+  
+    socket.on('edificio-deshabilitado', ({ edificioId }) => handleUpdate(edificioId, 'no disponible'));
+    socket.on('edificio-habilitado', ({ edificioId }) => handleUpdate(edificioId, 'disponible'));
+  
+    return () => {
+      socket.off('edificio-deshabilitado');
+      socket.off('edificio-habilitado');
+    };
+  }, []);
+
+  const selectEdificio = (edificio) => {
+    setSelectedEdificio(edificio);
+    setModalVisible(true);
+  };
+
+  const handleMaintenanceSelection = (selection) => {
+    if (selectedEdificio) {
+      console.log(`Poner ${selectedEdificio.Nombre} en mantenimiento: ${selection}`);
+      socket.emit('deshabilitar-edificio', { 
+        edificioId: selectedEdificio.EdificioID,
+        mantenimiento: selection
+      });
+      setModalVisible(false);
+    }
+  };
+
+  const handleReenable = () => {
+    if (selectedEdificio && selectedEdificio.EdificioID) {
+      socket.emit('habilitar-edificio', { edificioId: selectedEdificio.EdificioID });
+    }
+  };
 
   const images = [
     require('../images/ut/ut a.jpg'),
@@ -85,7 +120,8 @@ function HomeBuilldings({ navigation }) {
   );
 }
 
-export default HomeBuilldings;
+export default HomeBuildings;
+
 
 export const stylesUbication = StyleSheet.create({
   centeredView: {
