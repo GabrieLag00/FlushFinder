@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 const socket = io("http://localhost:8765");
 
 function Ubicacion({ navigation }) {
-  const edificios = useEdificios();
+  const [edificios, setEdificios] = useState([]);
 
   useEffect(() => {
     const cargarEdificios = async () => {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Button } from 'react-native';
 import { stylesToilets } from './ToiletsScreen';
 import { stylesUbication } from './UbicationScreen';
 import { stylesLogin } from './LoginScreen';
