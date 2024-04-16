@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Button } from 'react-native';
-=======
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Alert } from 'react-native';
->>>>>>> 3d4fa629f9714c17c81843fbaac9c33b12cf51bb
 import { stylesToilets } from './ToiletsScreen';
 import { stylesUbication } from './UbicationScreen';
 import { stylesLogin } from './LoginScreen';
