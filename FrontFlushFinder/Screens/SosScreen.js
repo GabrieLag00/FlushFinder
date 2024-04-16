@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Button } from 'react-native';
+=======
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Alert } from 'react-native';
+>>>>>>> 3d4fa629f9714c17c81843fbaac9c33b12cf51bb
 import { stylesToilets } from './ToiletsScreen';
 import { stylesUbication } from './UbicationScreen';
 import { stylesLogin } from './LoginScreen';
@@ -7,27 +12,69 @@ import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import io from 'socket.io-client';
 
-function SosScreen({ navigation }) {
-  const imageReturn = require('../images/return.png');
 
-  //Rating limpieza
+const socket = io("http://192.168.100.18:8765");
+
+
+function SosScreen({ navigation, route }) {
+  const imageReturn = require('../images/return.png');
   const [ratingClean, setRatingClean] = useState(0);
+  const [selectedImages, setSelectedImages] = useState({
+    noPaper: false,
+    noSoap: false
+  });
+  const [problema, setProblema] = useState('');
+  const [comentarios, setComentarios] = useState('');
+  const [userData, setUserData] = useState(null);
+
   const handleStarPress = (starIndex) => {
-    setRatingClean(starIndex); //Actualiza el rating
+    setRatingClean(starIndex);
   };
 
-  //¿El baño no cuenta con?
-  const [selectedImages, setSelectedImages] = useState({
-    image1: false,
-    image2: false,
-  });
-  const toggleImage = (imageKey) => {
-    setSelectedImages((prevState) => ({
-      ...prevState,
-      [imageKey]: !prevState[imageKey],
-    }));
-  }; //Actualiza el rating
 
+  const toggleImage = (imageKey) => {
+    setSelectedImages(prevState => ({
+      ...prevState,
+      [imageKey]: !prevState[imageKey]
+    }));
+  };
+
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userDataJson = await AsyncStorage.getItem('userData');
+      if (userDataJson) {
+        const user = JSON.parse(userDataJson);
+        setUserData(user);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+
+  
+  const handleSendSos = async () => {
+    if (!userData) {
+      Alert.alert("Error", "No se pudo recuperar la información del usuario.");
+      return;
+    }
+
+    const sosData = {
+      UsuarioID: userData.usuario.usuarioID,  // Usar el usuarioID almacenado
+      BanoID: route.params.banoId, // Asegúrate de que BanoID es pasado como parámetro
+      Problema: problema,
+      RatingLimpieza: ratingClean,
+      Papel: selectedImages.image1,
+      Jabon: selectedImages.image2,
+      Comentarios: comentarios,
+    };
+
+    socket.emit('enviar-sos', sosData, (response) => {
+      console.log('Respuesta del servidor:', response);
+      Alert.alert("Reporte enviado", "Tu reporte ha sido enviado exitosamente.");
+      navigation.goBack();
+    });
+  };
 
   return (
     <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
@@ -54,58 +101,40 @@ function SosScreen({ navigation }) {
             </TouchableOpacity>
           ))}
         </View>
-
         <Text style={stylesSos.cleanTitle}>¿El baño no cuenta con?</Text>
         <View style={stylesSos.viewRating}>
-          <TouchableOpacity onPress={() => toggleImage('image1')} style={stylesSos.starButton}>
+          <TouchableOpacity onPress={() => toggleImage('noPaper')} style={stylesSos.starButton}>
             <Image
-              source={selectedImages.image1 ? require('../images/papel-higienico-filled.png') : require('../images/papel-higienico.png')}
+              source={selectedImages.noPaper ? require('../images/papel-higienico-filled.png') : require('../images/papel-higienico.png')}
               style={stylesSos.starImage}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => toggleImage('image2')} style={stylesSos.starButton}>
+          <TouchableOpacity onPress={() => toggleImage('noSoap')} style={stylesSos.starButton}>
             <Image
-              source={selectedImages.image2 ? require('../images/jabon-filled.png') : require('../images/jabon.png')}
+              source={selectedImages.noSoap ? require('../images/jabon-filled.png') : require('../images/jabon.png')}
               style={stylesSos.starImage}
             />
           </TouchableOpacity>
         </View>
       </View>
 
+     
+     
       <TextInput
         style={stylesLogin.input}
-        placeholder="Nombre"
-        keyboardType="first-name-sos"
-        autoCapitalize="none"
-        placeholderTextColor="#FEFEFE"
-      />
-      <TextInput
-        style={stylesLogin.input}
-        placeholder="Gmail"
-        keyboardType="email-address-sos"
-        autoCapitalize="none"
-        placeholderTextColor="#FEFEFE"
-      />
-      <TextInput
-        style={stylesLogin.input}
-        placeholder="Problema"
-        keyboardType="problem-sos"
-        autoCapitalize="none"
-        placeholderTextColor="#FEFEFE"
+        placeholder="Describa el problema"
+        onChangeText={setProblema}
+        value={problema}
       />
       <TextInput
         style={[stylesLogin.input, stylesSos.inputSosComments]}
-        placeholder="Comentarios"
-        keyboardType="comments-sos"
-        autoCapitalize="none"
-        placeholderTextColor="#FEFEFE"
+        placeholder="Comentarios adicionales"
+        onChangeText={setComentarios}
+        value={comentarios}
       />
-
-      <View style={stylesLogin.buttonContainer}>
-        <TouchableOpacity style={[stylesLogin.button, stylesSos.buttonSosContainer]} onPress={() => navigation.navigate('Dashboard')}>
-          <Text style={stylesLogin.buttonText}>Enviar</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={stylesLogin.button} onPress={handleSendSos}>
+        <Text style={stylesLogin.buttonText}>Enviar</Text>
+      </TouchableOpacity>
 
     </ScrollView>
   );

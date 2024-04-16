@@ -21,9 +21,9 @@ export const habilitarManejoSosReports = (io) => {
         });
 
         // Emitir un evento a los conserjes con el reporte SOS
-        io.emit('reporte-sos-nuevo', nuevoSosReport);
+        io.emit('reporte-sos-nuevo', nuevoSosReport.toJSON());
 
-        console.log(`Reporte SOS recibido y enviado al conserje: ${nuevoSosReport}`);
+        console.log(`Reporte SOS recibido y enviado al conserje: ${JSON.stringify(nuevoSosReport)}`);
       } catch (error) {
         console.error('Error al guardar el reporte SOS:', error);
         socket.emit('error-sos', { mensaje: 'Error al enviar el reporte SOS.' });

@@ -36,6 +36,7 @@ function LoginScreen({ navigation }) {
         const userData = {
           token: response.token,
           usuario: {
+            usuarioID: response.usuario.id,
             nombre: response.usuario.nombre,
             email: response.usuario.email,
             genero: response.usuario.genero,
