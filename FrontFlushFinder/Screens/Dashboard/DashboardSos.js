@@ -5,7 +5,7 @@ import Header from '../../components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesDashboard } from './DashboardScreen';
 
-const socket = io("http://192.168.100.18:8765");
+const socket = io("http://10.10.57.191:8765");
 
 // Asegúrate de que las rutas a las imágenes son correctas
 const jabonFilled = require('./images/jabon-filled.png');
