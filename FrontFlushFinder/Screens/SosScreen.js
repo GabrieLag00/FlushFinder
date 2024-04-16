@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import io from 'socket.io-client';
 
 
-const socket = io("http://10.10.50.21:8765");
+const socket = io("http://192.168.100.18:8765");
 
 
 function SosScreen({ navigation, route }) {
