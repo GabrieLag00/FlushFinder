@@ -10,7 +10,7 @@ import io from 'socket.io-client';
 const { width } = Dimensions.get('window');
 const isLargeScreen = width > 600;
 
-const socket = io("http://192.168.100.18:8765");
+const socket = io("http://10.10.57.191:8765");
 
 
 function SosScreen({ navigation, route }) {
