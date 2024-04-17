@@ -46,7 +46,7 @@ const DashboardScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <SafeAreaView style={stylesDashboard.containerSafeArea}>
+    <SafeAreaView style={stylesUbication.containerScrollView}>
       <Header navigation={navigation} />
       <View style={stylesDashboard.bodyDash}>
         <Text>pendejo aldair cachetes de marrana </Text>
@@ -76,6 +76,9 @@ export const stylesDashboard = StyleSheet.create({
   containerSafeArea: {
     flex: 1,
     backgroundColor: '#3451C6',
+    justifyContent: 'center',
+    alignItems: 'center',
+
   },
   bodyDash: {
     flex: 1,
