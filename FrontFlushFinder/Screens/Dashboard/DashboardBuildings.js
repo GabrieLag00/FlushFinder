@@ -3,11 +3,12 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView 
 import { stylesLogin } from '../LoginScreen';
 import Ubicacion, { stylesUbication } from '../UbicationScreen';
 import Header from '../../components/Header';
-import NavBar from '../../components/NavBar';
+import NavBar, { stylesNavBar } from '../../components/NavBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images, useEdificios } from '../../components/ImagesBuildings';
 import ButtonDisable from '../../components/ButtonDisable';
 import { stylesDashboard } from './DashboardScreen';
+
 
 function DashboardBuildings({ navigation }) {
   const edificios = useEdificios();
@@ -33,7 +34,7 @@ function DashboardBuildings({ navigation }) {
         </ScrollView>
 
       </View>
-      <NavBar navigation={navigation} style={stylesDashboard.containerNavBar} />
+      <NavBar navigation={navigation} />
     </SafeAreaView>
 
 
@@ -41,7 +42,7 @@ function DashboardBuildings({ navigation }) {
 }
 
 export const stylesDashboardBuildings = StyleSheet.create({
-  
+
 });
 
 export default DashboardBuildings;

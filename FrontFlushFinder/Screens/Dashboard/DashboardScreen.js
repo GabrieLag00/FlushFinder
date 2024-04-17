@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, FlatList }
 import { stylesLogin } from '../LoginScreen';
 import { stylesUbication } from '../UbicationScreen';
 import Header from '../../components/Header';
-import NavBar from '../../components/NavBar';
+import NavBar, { stylesNavBar } from '../../components/NavBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import io from 'socket.io-client';
 
@@ -46,33 +46,33 @@ const DashboardScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.containerSafeArea}>
+    <SafeAreaView style={stylesDashboard.containerSafeArea}>
       <Header navigation={navigation} />
-      <View style={styles.bodyDash}>
+      <View style={stylesDashboard.bodyDash}>
         <Text>pendejo aldair cachetes de marrana </Text>
-        <View style={styles.sensorContainer}>
-          <Text style={styles.sensorText}>Baño 1: {bano1}</Text>
-          <Text style={styles.sensorText}>Baño 2: {bano2}</Text>
-          <Text style={styles.sensorText}>Papel Higiénico: {papel}</Text>
-          <Text style={styles.sensorText}>Jabón: {jabon}</Text>
+        <View style={stylesDashboard.sensorContainer}>
+          <Text style={stylesDashboard.sensorText}>Baño 1: {bano1}</Text>
+          <Text style={stylesDashboard.sensorText}>Baño 2: {bano2}</Text>
+          <Text style={stylesDashboard.sensorText}>Papel Higiénico: {papel}</Text>
+          <Text style={stylesDashboard.sensorText}>Jabón: {jabon}</Text>
         </View>
-        <Text style={styles.title}>Tabla de Distancia</Text>
+        <Text style={stylesDashboard.title}>Tabla de Distancia</Text>
         <FlatList
           data={distanceData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <View style={styles.row}>
-              <Text style={styles.distance}>{item} cm</Text>
+            <View style={stylesDashboard.row}>
+              <Text style={stylesDashboard.distance}>{item} cm</Text>
             </View>
           )}
         />
       </View>
-      <NavBar navigation={navigation} style={styles.containerNavBar} />
+      <NavBar navigation={navigation} />
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+export const stylesDashboard = StyleSheet.create({
   containerSafeArea: {
     flex: 1,
     backgroundColor: '#3451C6',
@@ -103,9 +103,6 @@ const styles = StyleSheet.create({
   distance: {
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  containerNavBar: {
-    // Estilos del navbar si es necesario
   },
 });
 
