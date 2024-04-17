@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import Header from '../../components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesDashboard } from './DashboardScreen';
+import NavBar from '../../components/NavBar';
 
 const socket = io("http://192.168.100.18:8765");
 
@@ -31,31 +32,6 @@ function DashboardSos({ navigation }) {
 
   return (
     <SafeAreaView style={stylesDashboard.containerSafeArea}>
-
-
-
-
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Button title="Mostrar Alerta" onPress={showAlert} />
-        <AwesomeAlert
-          show={alertVisible}
-          showProgress={false}
-          title="Alerta Personalizada"
-          message="¡Hola! Este es un mensaje de alerta personalizado."
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={true}
-          showConfirmButton={true}
-          cancelText="No, cancelar"
-          confirmText="Aceptar"
-          confirmButtonColor="#DD6B55"
-          onCancelPressed={hideAlert}
-          onConfirmPressed={hideAlert}
-          onDismiss={hideAlert}
-        />
-      </View>
-
-
       <Header navigation={navigation} />
       <ScrollView contentContainerStyle={stylesDashboard.bodyDash}>
         {sosReports.map((report, index) => (
@@ -79,6 +55,7 @@ function DashboardSos({ navigation }) {
           </View>
         ))}
       </ScrollView>
+      <NavBar navigation={navigation} style={stylesDashboard.containerNavBar} />
     </SafeAreaView>
   );
 }

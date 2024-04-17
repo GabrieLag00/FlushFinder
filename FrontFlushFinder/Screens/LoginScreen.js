@@ -1,28 +1,26 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Dimensions } from 'react-native';
 /*import fontSizes from '../styles/ClassStyle';*/
 import { loginUsuario } from '../api';
 import { z } from 'zod';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const isLargeScreen = width > 600;
+const { width } = Dimensions.get('window');
+
 const LoginSchema = z.object({
   email: z.string()
-    .email({ message: "Correo electrónico no válido" })
-    .max(255, { message: "El correo electrónico no debe exceder los 255 caracteres" }),
+    .email({ message: "✘ Correo electrónico no válido" })
+    .max(255, { message: "✘ El correo electrónico no debe exceder los 255 caracteres" }),
   contrasena: z.string()
-    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" })
-    .max(50, { message: "La contraseña no debe exceder los 50 caracteres" }),
+    .min(8, { message: "✘ La contraseña debe tener al menos 8 caracteres" })
+    .max(50, { message: "✘ La contraseña no debe exceder los 50 caracteres" }),
 });
 
-
-
-
 function LoginScreen({ navigation }) {
-
   const [email, setEmail] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [errors, setErrors] = useState({});
-
 
   const handleLogin = async () => {
     try {
@@ -71,10 +69,10 @@ function LoginScreen({ navigation }) {
 
   return (
     <View style={stylesLogin.container}>
-      <Text style={stylesLogin.title}>Inicia sesión</Text>
+      <Text style={stylesLogin.title}>Iniciar sesión</Text>
       <TextInput
         style={stylesLogin.input}
-        placeholder="Gmail"
+        placeholder="Correo electrónico"
         keyboardType="email-address"
         autoCapitalize="none"
         placeholderTextColor="#FEFEFE"
@@ -96,7 +94,7 @@ function LoginScreen({ navigation }) {
           <Text style={stylesLogin.buttonText}>Iniciar sesión</Text>
         </TouchableOpacity>
       </View>
-      
+
 
       <View style={stylesLogin.ligaContainer}>
 
@@ -105,7 +103,7 @@ function LoginScreen({ navigation }) {
             <Text style={stylesLogin.ligaText}>¿No tienes cuenta?</Text>
             <View style={stylesLogin.viewSpace} />
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Regístrate aquí</Text>
+              <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Regístrate</Text>
             </TouchableOpacity>
           </View>
 
@@ -113,7 +111,7 @@ function LoginScreen({ navigation }) {
             <Text style={stylesLogin.ligaText}>¿Eres un conserje?</Text>
             <View style={stylesLogin.viewSpace} />
             <TouchableOpacity onPress={() => navigation.navigate('ConserjeLogin')}>
-              <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Inicia sesión aquí</Text>
+              <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Iniciar sesión</Text>
             </TouchableOpacity>
           </View>
 
@@ -121,17 +119,7 @@ function LoginScreen({ navigation }) {
 
       </View>
 
-      <View style={stylesLogin.buttonContainer}>
-        <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('Dashboard')}>
-          <Text style={stylesLogin.buttonText}>Dashboard</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={stylesLogin.buttonContainer}>
-        <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('test')}>
-          <Text style={stylesLogin.buttonText}>test</Text>
-        </TouchableOpacity>
-      </View>
+      
 
     </View>
   );
@@ -139,41 +127,46 @@ function LoginScreen({ navigation }) {
 
 export const stylesLogin = StyleSheet.create({
   errorText: {
-    color: 'red',
-    fontSize: 14,
+    color: '#FF0303',
+    fontSize: 18,
     marginLeft: 20,
     marginTop: 5,
+    fontWeight: 'bold',
   },
   container: {
     flex: 1,
     backgroundColor: '#3451C6',
     justifyContent: 'center',
+    padding: 20, // Añade un poco de padding alrededor para evitar que los elementos toquen los bordes de la pantalla
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 60,
+    fontSize: isLargeScreen ? 24 : 45,
+    //fontSize: width < 600 ? 30 : 60, // Tamaño dinámico del título dependiendo de si es dispositivo móvil o web
     color: '#FEFEFE',
     marginBottom: 30,
     textAlign: 'center',
+    marginVertical: 20, // Reducir el margen vertical para pequeñas pantallas
   },
   input: {
     backgroundColor: '#8594CB',
-    marginBottom: 20,
+    //marginBottom: 20,
+    marginTop: 20,
     paddingHorizontal: 30,
     paddingVertical: 15,
     borderRadius: 4,
-    width: '80%',
+    width: '100%', // Usa el 100% del contenedor, ajusta el contenedor en su lugar
     alignSelf: 'center',
     fontSize: 20,
     color: '#FEFEFE'
   },
   buttonContainer: {
     marginTop: 20,
-    width: '50%',
+    width: '80%', // Ajustar el ancho para hacer que los botones sean más accesibles en pantallas más pequeñas
     alignSelf: 'center',
   },
   button: {
-    paddingVertical: 30,
+    paddingVertical: 20, // Reducir el padding vertical para dispositivos más pequeños
     backgroundColor: '#0374FF',
     borderRadius: 4,
     alignItems: 'center',
@@ -182,16 +175,17 @@ export const stylesLogin = StyleSheet.create({
   buttonText: {
     color: '#FEFEFE',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 18, // Un tamaño de fuente ligeramente más pequeño para adaptarse mejor a diferentes tamaños de pantalla
   },
   ligaContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 20,
+    flexWrap: 'wrap', // Permitir que los enlaces se ajusten en pantallas pequeñas
   },
   ligaText: {
     color: '#FEFEFE',
-    fontSize: 20,
+    fontSize: 18, // Tamaño de fuente más adecuado para móviles y web
   },
   ligaTextBold: {
     fontWeight: 'bold',
@@ -202,6 +196,7 @@ export const stylesLogin = StyleSheet.create({
   },
   viewFlex: {
     flexDirection: 'row',
+    justifyContent: 'center', // Asegurarse de que los textos estén centrados
   },
 
 });

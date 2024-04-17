@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { Icon } from 'react-native-elements';
+import { stylesLogin } from '../Screens/LoginScreen';
 
 function Header({ navigation }) {
   const [userDetails, setUserDetails] = useState({ name: 'Cargando...', detail: 'Cargando...' });
@@ -40,7 +41,14 @@ function Header({ navigation }) {
           />
           {isActive && (
             <TouchableOpacity style={stylesHeader.overlay} onPress={handleLogout}>
-              <Text style={stylesHeader.logoutText}>Salir</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={stylesHeader.logoutText}>Salir</Text>
+                <View style={stylesLogin.viewSpace} />
+                <Icon
+                  name='logout'
+                  color='#FEFEFE'
+                />
+              </View>
             </TouchableOpacity>
           )}
         </View>

@@ -96,7 +96,7 @@ export const stylesUbication = StyleSheet.create({
     alignItems: 'center',
   },
   titleUbication: {
-    marginVertical: 30,
+    marginBottom: 60,
   },
   rowContainer: {
     flexDirection: 'row',

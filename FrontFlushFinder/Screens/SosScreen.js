@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, Dimensions } from 'react-native';
 import { stylesToilets } from './ToiletsScreen';
 import { stylesUbication } from './UbicationScreen';
 import { stylesLogin } from './LoginScreen';
@@ -7,6 +7,8 @@ import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import io from 'socket.io-client';
 
+const { width } = Dimensions.get('window');
+const isLargeScreen = width > 600;
 
 const socket = io("http://192.168.100.18:8765");
 
@@ -47,7 +49,7 @@ function SosScreen({ navigation, route }) {
   }, []);
 
 
-  
+
   const handleSendSos = async () => {
     if (!userData) {
       Alert.alert("Error", "No se pudo recuperar la información del usuario.");
@@ -72,7 +74,7 @@ function SosScreen({ navigation, route }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
+    <ScrollView contentContainerStyle={[stylesUbication.containerScrollView, { paddingHorizontal: 20 }]}>
 
       <Header navigation={navigation} />
 
@@ -113,23 +115,33 @@ function SosScreen({ navigation, route }) {
         </View>
       </View>
 
-     
-     
+
+
       <TextInput
         style={stylesLogin.input}
-        placeholder="Describa el problema"
+        placeholder="Asunto"
         onChangeText={setProblema}
         value={problema}
       />
       <TextInput
         style={[stylesLogin.input, stylesSos.inputSosComments]}
-        placeholder="Comentarios adicionales"
+        placeholder="Descripción del problema"
         onChangeText={setComentarios}
         value={comentarios}
+        multiline={true} // Permite múltiples líneas
+        numberOfLines={4} // Establece un número inicial de líneas
       />
-      <TouchableOpacity style={stylesLogin.button} onPress={handleSendSos}>
-        <Text style={stylesLogin.buttonText}>Enviar</Text>
-      </TouchableOpacity>
+      <View style={stylesLogin.buttonContainer}>
+        <TouchableOpacity style={stylesLogin.button} onPress={handleSendSos}>
+          <Text style={stylesLogin.buttonText}>Enviar</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={stylesLogin.buttonContainer}>
+        <TouchableOpacity style={[stylesLogin.button, {backgroundColor:'lightgray'}]} onPress={() => navigation.goBack()}>
+          <Text style={stylesLogin.buttonText}>Regresar</Text>
+        </TouchableOpacity>
+      </View>
 
     </ScrollView>
   );
@@ -139,49 +151,46 @@ export const stylesSos = StyleSheet.create({
   buttonContainer: {
     marginTop: 20,
     width: '100%',
+    alignItems: 'center',
   },
   buttonSos: {
     padding: 15,
     backgroundColor: '#0374FF',
     borderRadius: 30,
     alignItems: 'center',
-    width: '20%',
-
-    position: 'relative',
-    left: '75%'
+    width: isLargeScreen ? '10%' : '20%', // Ajuste de ancho relativo
+    alignSelf: 'flex-end',  // Alineación a la derecha de forma más consistente
+    marginRight: isLargeScreen ? '5%' : '10%',  // Margen derecho para alinear correctamente el botón
   },
   imgReturn: {
     width: 30,
     height: 30,
   },
-
   viewRating: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: '10%'
+    marginBottom: isLargeScreen ? '5%' : '10%',  // Ajuste del margen inferior basado en el tamaño de pantalla
   },
   starButton: {
     margin: 2,
   },
   starImage: {
-    width: 60, // Ajusta el tamaño de las estrellas según tus necesidades
-    height: 60,
+    width: isLargeScreen ? 40 : 60,  // Ajuste del tamaño de las imágenes para pantallas grandes
+    height: isLargeScreen ? 40 : 60,
   },
   cleanTitle: {
-    fontSize: 45,
+    fontSize: width < 600 ? 30 : 60,
+    //fontSize: isLargeScreen ? 24 : 45,
     fontWeight: 'bold',
     color: '#FEFEFE',
-    marginTop: '',
     textAlign: 'center',
-  },
-  buttonSosContainer: {
-    marginBottom: '15%'
+    marginVertical: 20,  // Espacio vertical para mejorar la distribución
   },
   inputSosComments: {
-    paddingVertical: '25%',
+    paddingVertical: 30, // Reducción de padding vertical para que no sea demasiado en pantallas grandes
   },
   ratingViewContainer: {
-    marginVertical: '10%',
+    marginVertical: isLargeScreen ? '2%' : '10%',  // Ajuste del espaciado vertical
     alignItems: 'center'
   },
 

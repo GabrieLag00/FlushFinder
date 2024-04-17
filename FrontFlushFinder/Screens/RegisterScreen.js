@@ -18,17 +18,17 @@ const styles = StyleSheet.create({
 
 const RegistroSchema = z.object({
   nombre: z.string()
-    .min(1, { message: "El nombre es requerido" })
+    .min(1, { message: "✘ El nombre es requerido" })
     .max(100, { message: "El nombre no debe exceder los 100 caracteres" }),
   email: z.string()
-    .email({ message: "Correo electrónico no válido" })
-    .max(255, { message: "El correo electrónico no debe exceder los 255 caracteres" }),
+    .email({ message: "✘ Correo electrónico no válido" })
+    .max(255, { message: "✘ El correo electrónico no debe exceder los 255 caracteres" }),
   contrasena: z.string()
-    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" })
-    .max(50, { message: "La contraseña no debe exceder los 50 caracteres" })
-    .regex(/[a-zA-Z]/, { message: "La contraseña debe contener al menos una letra" })
-    .regex(/[0-9]/, { message: "La contraseña debe contener al menos un número" })
-    .regex(/[^a-zA-Z0-9]/, { message: "La contraseña debe contener al menos un carácter especial" }),
+    .min(8, { message: "✘ La contraseña debe tener al menos 8 caracteres" })
+    .max(50, { message: "✘ La contraseña no debe exceder los 50 caracteres" })
+    .regex(/[a-zA-Z]/, { message: "✘ La contraseña debe contener al menos una letra" })
+    .regex(/[0-9]/, { message: "✘ La contraseña debe contener al menos un número" })
+    .regex(/[^a-zA-Z0-9]/, { message: "✘ La contraseña debe contener al menos un carácter especial" }),
   // Asumimos que el género será validado en otra pantalla
 });
 
@@ -68,18 +68,18 @@ function RegisterScreen({ navigation }) {
         value={nombre}
         onChangeText={setNombre}
       />
-      {errors.nombre && <Text style={styles.errorText}>{errors.nombre}</Text>}
+      {errors.nombre && <Text style={stylesLogin.errorText}>{errors.nombre}</Text>}
       
       <TextInput
         style={stylesLogin.input}
-        placeholder="Gmail"
+        placeholder="Correo electrónico"
         keyboardType="email-address"
         autoCapitalize="none"
         placeholderTextColor="#FEFEFE"
         value={email}
         onChangeText={setEmail}
       />
-      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+      {errors.email && <Text style={stylesLogin.errorText}>{errors.email}</Text>}
       
       <TextInput
         style={stylesLogin.input}
@@ -89,7 +89,7 @@ function RegisterScreen({ navigation }) {
         value={contrasena}
         onChangeText={setContrasena}
       />
-      {errors.contrasena && <Text style={styles.errorText}>{errors.contrasena}</Text>}
+      {errors.contrasena && <Text style={stylesLogin.errorText}>{errors.contrasena}</Text>}
       
       <View style={stylesLogin.buttonContainer}>
         <TouchableOpacity style={stylesLogin.button} onPress={handleRegister}>
@@ -101,7 +101,7 @@ function RegisterScreen({ navigation }) {
         <Text style={stylesLogin.ligaText}>¿Ya tienes cuenta?</Text>
         <View style={stylesLogin.viewSpace} />
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Inicia sesión aquí</Text>
+          <Text style={[stylesLogin.ligaText, stylesLogin.ligaTextBold]}>Iniciar sesión</Text>
         </TouchableOpacity>
       </View>
     </View>
