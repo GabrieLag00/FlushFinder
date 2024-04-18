@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { stylesLogin } from './LoginScreen';
 import { registrarUsuario } from '../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const { width } = Dimensions.get('window');
+const isLargeScreen = width > 600;
 
 // Asegúrate de incluir `route` en las props para acceder a los parámetros
 function GenderSelector({ navigation, route }) {
@@ -55,24 +58,24 @@ function GenderSelector({ navigation, route }) {
 
   return (
     <View style={stylesLogin.container}>
-      <View style={styles.selectorContainer}>
-        <TouchableOpacity onPress={() => setGender(gender === 'M' ? 'F' : 'M')} style={styles.arrow}>
-          <MaterialCommunityIcons name="chevron-left" size={60} color="#8594CB" />
+      <View style={stylesGender.selectorContainer}>
+        <TouchableOpacity onPress={() => setGender(gender === 'M' ? 'F' : 'M')} style={stylesGender.arrow}>
+          <MaterialCommunityIcons name="chevron-left" size={120} color="#8594CB" />
         </TouchableOpacity>
   
         <TouchableOpacity
-          style={styles.genderIcon}
+          style={stylesGender.genderIcon}
           onPress={() => completeRegistration(gender)} // Envía el género actual al completar el registro
         >
           <MaterialCommunityIcons
             name={gender === 'M' ? "human-male" : "human-female"}
-            size={100}
-            color="#8594CB"
+            size={300}
+            color="#FEFEFE"
           />
         </TouchableOpacity>
   
-        <TouchableOpacity onPress={() => setGender(gender === 'M' ? 'F' : 'M')} style={styles.arrow}>
-          <MaterialCommunityIcons name="chevron-right" size={60} color="#8594CB" />
+        <TouchableOpacity onPress={() => setGender(gender === 'M' ? 'F' : 'M')} style={stylesGender.arrow}>
+          <MaterialCommunityIcons name="chevron-right" size={120} color="#8594CB" />
         </TouchableOpacity>
       </View>
     </View>
@@ -80,7 +83,7 @@ function GenderSelector({ navigation, route }) {
 }
 
 // No se hicieron cambios a los estilos, se mantienen como los proporcionaste
-const styles = StyleSheet.create({
+const stylesGender = StyleSheet.create({
   selectorContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -88,10 +91,11 @@ const styles = StyleSheet.create({
   },
   genderIcon: {
     position: 'absolute',
+    marginHorizontal: 30,
     zIndex: -1,
   },
   arrow: {
-    marginHorizontal: 50,
+    marginHorizontal: 60,
   },
 });
 
