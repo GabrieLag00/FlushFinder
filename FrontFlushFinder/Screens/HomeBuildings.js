@@ -9,10 +9,13 @@ const socket = io("http://10.10.50.21:8765");
 
 
 function HomeBuildings({ navigation }) {
+  //variables  y estados
   const [edificios, setEdificios] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEdificio, setSelectedEdificio] = useState(null);
 
+
+  //eluseeffect cargar edificios
   useEffect(() => {
     const cargarEdificios = async () => {
       try {
@@ -26,7 +29,9 @@ function HomeBuildings({ navigation }) {
     cargarEdificios();
   }, []);
 
+  //el use effect para actualizar la disponibilidad
   useEffect(() => {
+    //actualizar
     const handleUpdate = (edificioId, disponibilidad) => {
       setEdificios(currentEdificios => currentEdificios.map(edificio => {
         if (edificio.EdificioID === edificioId) {
@@ -35,7 +40,7 @@ function HomeBuildings({ navigation }) {
         return edificio;
       }));
     };
-  
+  //la  accion de actualizar  en socket
     socket.on('edificio-deshabilitado', ({ edificioId }) => handleUpdate(edificioId, 'no disponible'));
     socket.on('edificio-habilitado', ({ edificioId }) => handleUpdate(edificioId, 'disponible'));
   
@@ -45,11 +50,13 @@ function HomeBuildings({ navigation }) {
     };
   }, []);
 
+  //sleccionar un edificio y que el modal  se muestre
   const selectEdificio = (edificio) => {
     setSelectedEdificio(edificio);
     setModalVisible(true);
   };
 
+  //el modal  sleccionado y  que emitir el evento socket de disponibilidad
   const handleMaintenanceSelection = (selection) => {
     if (selectedEdificio) {
       console.log(`Poner ${selectedEdificio.Nombre} en mantenimiento: ${selection}`);
@@ -60,7 +67,7 @@ function HomeBuildings({ navigation }) {
       setModalVisible(false);
     }
   };
-
+  //la funcion para volverlo a habilitar
   const handleReenable = () => {
     if (selectedEdificio && selectedEdificio.EdificioID) {
       socket.emit('habilitar-edificio', { edificioId: selectedEdificio.EdificioID });
@@ -82,26 +89,38 @@ function HomeBuildings({ navigation }) {
 
   return (
     <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
+    
     <Header navigation={navigation} />
+
     <Text style={[stylesLogin.title, stylesUbication.titleUbication]}>Selecciona tu ubicación</Text>
+
     <View style={stylesUbication.rowContainer}>
+
+
       {edificios.map((edificio, index) => (
         <View key={edificio.EdificioID} style={stylesUbication.itemContainer}>
+
           <TouchableOpacity onPress={() => selectEdificio(edificio)}>
             <Image source={images[index % images.length]} style={stylesUbication.image} />
             <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{edificio.Nombre}</Text>
           </TouchableOpacity>
+
           <Button title="Poner en mantenimiento" onPress={() => selectEdificio(edificio)} />
           <Button title="Re-habilitar" onPress={handleReenable} color="green" />
+
         </View>
       ))}
+
     </View>
+
+
     <Modal
       animationType="slide"
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}
     >
+
       <View style={stylesUbication.centeredView}>
         <View style={stylesUbication.modalView}>
           <Text style={stylesUbication.modalText}>Selecciona qué baños poner en mantenimiento:</Text>
@@ -111,7 +130,9 @@ function HomeBuildings({ navigation }) {
           <Button title="Cancelar" onPress={() => setModalVisible(false)} />
         </View>
       </View>
+      
     </Modal>
+
   </ScrollView>
   );
 }

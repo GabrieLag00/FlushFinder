@@ -12,6 +12,14 @@ const SosReport = sequelize.define('SosReport', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  Nombre: {
+    type: DataTypes.STRING(255),
+    allowNull: true  // Dependiendo de tu requerimiento esto puede ser false
+  },
+  Email: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
   BanoID: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -42,7 +50,8 @@ const SosReport = sequelize.define('SosReport', {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW
-  }
+  },
+
 }, {
   tableName: 'sosreports',
   timestamps: false

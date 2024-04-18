@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable('sosreports', {
       SosReportID: {
         type: Sequelize.INTEGER,
@@ -15,17 +15,25 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'usuarios',
+          model: 'usuarios', // Asegúrate de que el nombre del modelo es correcto
           key: 'UsuarioID',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
+      Nombre: {
+        type: Sequelize.STRING(255),
+        allowNull: true
+      },
+      Email: {
+        type: Sequelize.STRING(255),
+        allowNull: true
+      },
       BanoID: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'banos',
+          model: 'banos', // Asegúrate de que el nombre del modelo es correcto
           key: 'BanoID',
         },
         onUpdate: 'CASCADE',
@@ -58,11 +66,10 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.NOW
       },
-      // Puedes añadir más campos si lo necesitas
     });
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('sosreports');
   }
 };

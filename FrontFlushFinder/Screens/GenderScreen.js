@@ -27,7 +27,7 @@ function GenderSelector({ navigation, route }) {
         const userData = {
             token: response.token,
             usuario: {
-                usuarioID: response.usuario.id,
+                usuarioID: response.usuario.usuarioID,
                 nombre: response.usuario.nombre,
                 email: response.usuario.email,
                 genero: response.usuario.genero,
