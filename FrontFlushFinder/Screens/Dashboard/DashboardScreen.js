@@ -75,6 +75,7 @@ const DashboardScreen = ({ navigation }) => {
 export const stylesDashboard = StyleSheet.create({
   containerSafeArea: {
     flex: 1,
+    alignItems: 'center',
     backgroundColor: '#3451C6',
   },
   bodyDash: {

@@ -6,6 +6,7 @@ import { stylesLogin } from './LoginScreen';
 import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import io from 'socket.io-client';
+import { Icon } from 'react-native-elements';
 
 const { width } = Dimensions.get('window');
 const isLargeScreen = width > 600;
@@ -122,6 +123,7 @@ function SosScreen({ navigation, route }) {
         placeholder="Asunto"
         onChangeText={setProblema}
         value={problema}
+        placeholderTextColor="#FEFEFE"
       />
       <TextInput
         style={[stylesLogin.input, stylesSos.inputSosComments]}
@@ -130,16 +132,31 @@ function SosScreen({ navigation, route }) {
         value={comentarios}
         multiline={true} // Permite múltiples líneas
         numberOfLines={4} // Establece un número inicial de líneas
+        placeholderTextColor="#FEFEFE"
       />
       <View style={stylesLogin.buttonContainer}>
-        <TouchableOpacity style={stylesLogin.button} onPress={handleSendSos}>
-          <Text style={stylesLogin.buttonText}>Enviar</Text>
+        <TouchableOpacity style={[stylesLogin.button, {backgroundColor:'#34C66E'}]} onPress={handleSendSos}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={stylesToilets.buttonBathText}>Enviar</Text>
+            <View style={stylesLogin.viewSpace} />
+            <Icon
+              name='send'
+              color='#FEFEFE'
+            />
+          </View>
         </TouchableOpacity>
       </View>
 
       <View style={stylesLogin.buttonContainer}>
-        <TouchableOpacity style={[stylesLogin.button, {backgroundColor:'lightgray'}]} onPress={() => navigation.goBack()}>
-          <Text style={stylesLogin.buttonText}>Regresar</Text>
+        <TouchableOpacity style={[stylesLogin.button, { }]} onPress={() => navigation.goBack()}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={stylesToilets.buttonBathText}>Regresar</Text>
+            <View style={stylesLogin.viewSpace} />
+            <Icon
+              name='keyboard-return'
+              color='#FEFEFE'
+            />
+          </View>
         </TouchableOpacity>
       </View>
 

@@ -1,9 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Alert, Dimensions } from 'react-native';
 import { stylesLogin } from './LoginScreen';
 import Header from '../components/Header';
-import {getEdificios} from '../api'
+import { getEdificios } from '../api'
 import io from 'socket.io-client';
+
+const { width } = Dimensions.get('window');
+const isLargeScreen = width > 600;
 
 const socket = io("http://10.10.50.21:8765");
 
@@ -67,22 +70,21 @@ function Ubicacion({ navigation }) {
     require('../images/ut/ut m.jpg'),
   ];
 
-  
   return (
     <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
-    <Header navigation={navigation} />
-    <Text style={[stylesLogin.title, stylesUbication.titleUbication]}>Selecciona tu ubicación</Text>
-    <View style={stylesUbication.rowContainer}>
-      {edificios.map((edificio, index) => (
-        <View key={edificio.EdificioID} style={stylesUbication.itemContainer}>
-          <TouchableOpacity onPress={() => handleSelectEdificio(edificio)}>
-            <Image source={images[index % images.length]} style={stylesUbication.image} />
-            <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{edificio.Nombre}</Text>
-          </TouchableOpacity>
-        </View>
-      ))}
-    </View>
-  </ScrollView>
+      <Header navigation={navigation} />
+      <Text style={[stylesLogin.title, stylesUbication.titleUbication]}>Selecciona tu ubicación</Text>
+      <View style={stylesUbication.rowContainer}>
+        {edificios.map((edificio, index) => (
+          <View key={edificio.EdificioID} style={stylesUbication.itemContainer}>
+            <TouchableOpacity onPress={() => handleSelectEdificio(edificio)}>
+              <Image source={images[index % images.length]} style={stylesUbication.image} />
+              <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{edificio.Nombre}</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
@@ -104,12 +106,15 @@ export const stylesUbication = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     marginBottom: 30,
+    width: '100%',
+    flex: 1,
+    display: 'flex',
   },
   itemContainer: {
+    width: '50%', // Cada elemento ocupa el 50% del ancho del rowContainer
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 12,
-    marginBottom: 30,
+    marginVertical: 10,
   },
   textContainer: {
     backgroundColor: '#0374FF',
