@@ -11,6 +11,8 @@ export const habilitarManejoSosReports = (io) => {
         // Crear el reporte SOS en la base de datos
         const nuevoSosReport = await SosReport.create({
           UsuarioID: datosSos.UsuarioID,
+          Nombre: datosSos.Nombre,
+          Email: datosSos.Email,
           BanoID: datosSos.BanoID,
           Problema: datosSos.Problema,
           RatingLimpieza: datosSos.RatingLimpieza,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, Dimensions } from 'react-native';
 import { stylesToilets } from './ToiletsScreen';
 import { stylesUbication } from './UbicationScreen';
@@ -11,7 +11,7 @@ import { Icon } from 'react-native-elements';
 const { width } = Dimensions.get('window');
 const isLargeScreen = width > 600;
 
-const socket = io("http://10.10.57.191:8765");
+const socket = io("http://192.168.100.18:8765");
 
 
 function SosScreen({ navigation, route }) {
@@ -43,7 +43,10 @@ function SosScreen({ navigation, route }) {
       const userDataJson = await AsyncStorage.getItem('userData');
       if (userDataJson) {
         const user = JSON.parse(userDataJson);
+        console.log("Usuario cargado:", user);
         setUserData(user);
+      } else {
+        console.log("No se encontraron datos de usuario en AsyncStorage.");
       }
     };
     fetchUserData();
@@ -51,28 +54,31 @@ function SosScreen({ navigation, route }) {
 
 
 
-  const handleSendSos = async () => {
-    if (!userData) {
-      Alert.alert("Error", "No se pudo recuperar la información del usuario.");
+  const handleSendSos = useCallback(async () => {
+    if (!userData || !userData.usuario || !userData.usuario.usuarioID) {
+      Alert.alert("Error", "No se pudo recuperar la información del usuario correctamente.");
       return;
     }
-
+  
     const sosData = {
-      UsuarioID: userData.usuario.usuarioID,  // Usar el usuarioID almacenado
-      BanoID: route.params.banoId, // Asegúrate de que BanoID es pasado como parámetro
+      UsuarioID: userData.usuario.usuarioID,
+      Nombre: userData.usuario.nombre,
+      Email: userData.usuario.email,
+      BanoID: route.params.banoId,
       Problema: problema,
       RatingLimpieza: ratingClean,
-      Papel: selectedImages.image1,
-      Jabon: selectedImages.image2,
+      Papel: selectedImages.noPaper,
+      Jabon: selectedImages.noSoap,
       Comentarios: comentarios,
     };
-
-    socket.emit('enviar-sos', sosData, (response) => {
+  
+    socket.emit('enviar-sos', sosData, response => {
       console.log('Respuesta del servidor:', response);
       Alert.alert("Reporte enviado", "Tu reporte ha sido enviado exitosamente.");
       navigation.goBack();
     });
-  };
+  }, [userData, problema, ratingClean, selectedImages, comentarios, route.params.banoId]);
+  
 
   return (
     <ScrollView contentContainerStyle={[stylesUbication.containerScrollView, { paddingHorizontal: 20 }]}>

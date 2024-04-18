@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, ScrollView, StyleSheet, Image, Button, Alert } from 'react-native';
 import io from 'socket.io-client';
 import Header from '../../components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesDashboard } from './DashboardScreen';
 import NavBar from '../../components/NavBar';
+import {getSOS, borrarSOS, borrarTodosSOS} from '../../api';
 
-const socket = io("http://10.10.57.191:8765");
+const socket = io("http://192.168.100.18:8765");
 
-// Asegúrate de que las rutas a las imágenes son correctas
 const jabonFilled = require('./images/jabon-filled.png');
 const jabonEmpty = require('./images/jabon.png');
 const papelFilled = require('./images/papel-higienico-filled.png');
@@ -16,27 +16,108 @@ const papelEmpty = require('./images/papel-higienico.png');
 
 function DashboardSos({ navigation }) {
   const [sosReports, setSosReports] = useState([]);
+  const [allReportsHandled, setAllReportsHandled] = useState(true);
+  const socketRef = useRef(null);
 
   useEffect(() => {
-    console.log("Estableciendo conexión con el socket y suscribiendo a eventos...");
-    socket.on('reporte-sos-nuevo', (newReport) => {
-      console.log("Nuevo SOS recibido:", newReport);
-      setSosReports(prevReports => [...prevReports, newReport]);
-    });
-  
+    fetchInitialSOS();
+    setupSocket();
     return () => {
-      console.log("Desconectando del socket y removiendo suscripciones...");
-      socket.off('reporte-sos-nuevo');
+      if (socketRef.current) {
+        socketRef.current.off('reporte-sos-nuevo');
+      }
     };
   }, []);
+
+  useEffect(() => {
+    setAllReportsHandled(sosReports.length === 0);
+  }, [sosReports]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (allReportsHandled) {
+        return;
+      }
+
+      e.preventDefault(); // Previene temporalmente al usuario de dejar la pantalla
+
+      Alert.alert(
+        'Reportes sin atender',
+        'No puedes salir sin haber atendido todos los reportes. ¿Deseas marcar todos como atendidos?',
+        [
+          { text: "Cancelar", style: 'cancel', onPress: () => {} },
+          {
+            text: 'Marcar Todos como Atendidos',
+            style: 'destructive',
+            onPress: () => {
+              handleDeleteAllSos(); // Función que marca todos los SOS como atendidos
+            }
+          }
+        ]
+      );
+    });
+
+    return unsubscribe;
+  }, [navigation, allReportsHandled]);
+
+  const fetchInitialSOS = async () => {
+    try {
+      const data = await getSOS();
+      setSosReports(data);
+    } catch (error) {
+      console.error("Error al cargar los SOS iniciales:", error);
+    }
+  };
+
+  const setupSocket = () => {
+    if (!socketRef.current) {
+      socketRef.current = io("http://192.168.100.18:8765");
+    }
+    socketRef.current.on('reporte-sos-nuevo', (newReport) => {
+      console.log("Nuevo SOS recibido:", newReport);
+      setSosReports(prevReports => {
+        const existingReport = prevReports.find(report => report.SosReportID === newReport.SosReportID);
+        if (!existingReport) {
+          return [...prevReports, newReport];
+        } else {
+          return prevReports.map(report => 
+            report.SosReportID === newReport.SosReportID ? newReport : report
+          );
+        }
+      });
+    });
+  };
+
+  const handleDeleteSos = async (sosReportID) => {
+    try {
+      await borrarSOS(sosReportID);
+      setSosReports(sosReports.filter(report => report.SosReportID !== sosReportID));
+      Alert.alert("Reporte Atendido", "El reporte ha sido marcado como atendido.");
+    } catch (error) {
+      console.error("Error al borrar el reporte SOS:", error);
+    }
+  };
+
+  const handleDeleteAllSos = async () => {
+    try {
+      await borrarTodosSOS();
+      setSosReports([]);
+      Alert.alert("Todos Atendidos", "Todos los reportes han sido marcados como atendidos.");
+    } catch (error) {
+      console.error("Error al borrar todos los reportes SOS:", error);
+    }
+  };
 
   return (
     <SafeAreaView style={stylesDashboard.containerSafeArea}>
       <Header navigation={navigation} />
+      <Button title="Marcar Todos como Atendidos" onPress={handleDeleteAllSos} color="red" />
       <ScrollView contentContainerStyle={stylesDashboard.bodyDash}>
         {sosReports.map((report, index) => (
           <View key={index} style={stylesSos.card}>
             <Text style={stylesSos.label}>Usuario: {report.UsuarioID}</Text>
+            <Text style={stylesSos.label}>Nombre: {report.Nombre}</Text>
+            <Text style={stylesSos.label}>Email: {report.Email}</Text>
             <Text style={stylesSos.label}>Problema: {report.Problema}</Text>
             <Text style={stylesSos.label}>Rating de Limpieza:</Text>
             <View style={stylesSos.imageContainer}>
@@ -52,10 +133,11 @@ function DashboardSos({ navigation }) {
             <Text style={stylesSos.label}>Jabón Faltante: {report.Jabon ? 'Sí' : 'No'}</Text>
             <Image source={report.Jabon ? jabonFilled : jabonEmpty} style={stylesSos.iconImage} />
             <Text style={stylesSos.label}>Comentarios: {report.Comentarios}</Text>
+            <Button title="Atendido" onPress={() => handleDeleteSos(report.SosReportID)} />
           </View>
         ))}
       </ScrollView>
-      <NavBar navigation={navigation} style={stylesDashboard.containerNavBar} />
+      <NavBar navigation={navigation} />
     </SafeAreaView>
   );
 }
