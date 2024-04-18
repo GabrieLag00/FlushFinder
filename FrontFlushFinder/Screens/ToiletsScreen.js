@@ -14,11 +14,46 @@ const isLargeScreen = width > 600;
 
 function Banos({ navigation, route }) {
     const menuOptions = [
-        "Disponible",
-        "Ocupado",
-        "En mantenimiento",
-        "Con jabón",
-        "Con papel"
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={stylesToilets.buttonBathText}>Disponible</Text>
+            <View style={stylesLogin.viewSpace} />
+            <Icon
+                name='check-circle'
+                color='#FEFEFE'
+            />
+        </View>,
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={stylesToilets.buttonBathText}>Ocupado</Text>
+            <View style={stylesLogin.viewSpace} />
+            <Icon
+                name='cancel'
+                color='#FEFEFE'
+            />
+        </View>,
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={stylesToilets.buttonBathText}>Mantenimiento</Text>
+        <View style={stylesLogin.viewSpace} />
+        <Icon
+            name='build'
+            color='#FEFEFE'
+        />
+    </View>,
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={stylesToilets.buttonBathText}>Jabón</Text>
+        <View style={stylesLogin.viewSpace} />
+        <Icon
+            name='soap'
+            color='#FEFEFE'
+        />
+    </View>,
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={stylesToilets.buttonBathText}>Papel</Text>
+        <View style={stylesLogin.viewSpace} />
+        <Icon
+            name='note'
+            color='#FEFEFE'
+        />
+    </View>,
     ];
 
     const { edificioId } = route.params;
@@ -49,7 +84,7 @@ function Banos({ navigation, route }) {
             setSelectedBano(banos[selectedIndex]);
         }
     }, [selectedIndex, banos]);
-    
+
 
 
     useEffect(() => {
@@ -81,13 +116,13 @@ function Banos({ navigation, route }) {
         }
     }, [edificioId, userGender]);
 
-    const options = [
+    {/* const options = [
         { id: 1, label: [<MaterialCommunityIcons name="check-circle" size={20} />, <View style={stylesLogin.viewSpace} />, 'Disponibles'] },
         { id: 2, label: [<MaterialCommunityIcons name="alert-circle" size={20} />, <View style={stylesLogin.viewSpace} />, 'Ocupados'] },
         { id: 3, label: [<MaterialCommunityIcons name="clock" size={20} />, <View style={stylesLogin.viewSpace} />, 'En mantenimiento'] },
         { id: 4, label: [<MaterialCommunityIcons name="chart-bubble" size={20} />, <View style={stylesLogin.viewSpace} />, 'Con jabón'] },
         { id: 5, label: [<MaterialCommunityIcons name="paper-roll" size={20} />, <View style={stylesLogin.viewSpace} />, 'Con papel'] },
-    ];
+    ]; */}
 
     return (
         <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
