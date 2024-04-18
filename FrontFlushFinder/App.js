@@ -23,7 +23,11 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login"/*"Api"*/>
+      <Stack.Navigator
+        initialRouteName="Login"/*"Api"*/
+        screenOptions={{
+          headerShown: false  // Esta línea oculta la cabecera en todas las pantallas
+        }}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Gender" component={GenderScreen} />
@@ -35,13 +39,13 @@ function App() {
         <Stack.Screen name="Dashboard" component={DashboardScreen} />
         <Stack.Screen name="DashboardBuildings" component={DashboardBuildings} />
         <Stack.Screen name="DashboardSos" component={DashboardSos} />
-         
-        <Stack.Screen name="ConserjeLogin" component={LoginConserje}/>
-        <Stack.Screen name="HomeConserje" component={HomeConserje}/>
-        <Stack.Screen name="HomeBuildings" component={HomeBuildings}/>
-        <Stack.Screen name="HomeAlerts" component={HomeAlerts}/>
-        <Stack.Screen name="Mantenimiento" component={Maintenance}/>
-        <Stack.Screen name="test" component={ButtonDisable}/>
+
+        <Stack.Screen name="ConserjeLogin" component={LoginConserje} />
+        <Stack.Screen name="HomeConserje" component={HomeConserje} />
+        <Stack.Screen name="HomeBuildings" component={HomeBuildings} />
+        <Stack.Screen name="HomeAlerts" component={HomeAlerts} />
+        <Stack.Screen name="Mantenimiento" component={Maintenance} />
+        <Stack.Screen name="test" component={ButtonDisable} />
       </Stack.Navigator>
     </NavigationContainer>
   );

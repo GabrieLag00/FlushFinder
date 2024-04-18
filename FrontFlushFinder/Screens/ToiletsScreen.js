@@ -13,11 +13,44 @@ const { width, height } = Dimensions.get('window');
 const isLargeScreen = width > 600;
 
 function Banos({ navigation, route }) {
+    const menuOptions = [
+        "Disponible",
+        "Ocupado",
+        "En mantenimiento",
+        "Con jabón",
+        "Con papel"
+    ];
+
     const { edificioId } = route.params;
     const [banos, setBanos] = useState([]);
-    const [selectedBano, setSelectedBano] = useState(null); // Cambiado para manejar el baño seleccionado
     const [modalVisible, setModalVisible] = useState(false);
     const [userGender, setUserGender] = useState(null);
+
+    const [selectedBano, setSelectedBano] = useState(null); // Cambiado para manejar el baño seleccionado
+    const [selectedIndex, setSelectedIndex] = useState(0); // Index del baño seleccionado
+    const nextBano = () => {
+        // Solo avanzar si no es el último baño
+        if (selectedIndex < banos.length - 1) {
+            const nextIndex = selectedIndex + 1;
+            setSelectedIndex(nextIndex);
+            setSelectedBano(banos[nextIndex]);
+        }
+    };
+    const prevBano = () => {
+        // Solo retroceder si no es el primer baño
+        if (selectedIndex > 0) {
+            const prevIndex = selectedIndex - 1;
+            setSelectedIndex(prevIndex);
+            setSelectedBano(banos[prevIndex]);
+        }
+    };
+    useEffect(() => {
+        if (banos.length > 0 && selectedIndex >= 0 && selectedIndex < banos.length) {
+            setSelectedBano(banos[selectedIndex]);
+        }
+    }, [selectedIndex, banos]);
+    
+
 
     useEffect(() => {
         // Recuperar el género del usuario de AsyncStorage
@@ -60,7 +93,7 @@ function Banos({ navigation, route }) {
         <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
             <Header navigation={navigation} />
 
-            <FlatList
+            {/* <FlatList
                 data={options}
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -72,7 +105,19 @@ function Banos({ navigation, route }) {
                     </View>
                 )}
                 keyExtractor={(item) => item.id.toString()}
-            />
+            /> */}
+
+            <ScrollView contentContainerStyle={stylesToilets.menuOptions}>
+                <View>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        {menuOptions.map((option, index) => (
+                            <TouchableOpacity key={index} style={stylesToilets.menuItem}>
+                                <Text style={stylesToilets.menuText}>{option}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                </View>
+            </ScrollView>
 
             {/* Aquí iría tu FlatList de opciones si aún necesitas incluirla */}
             <View style={stylesUbication.rowContainer}>
@@ -96,50 +141,77 @@ function Banos({ navigation, route }) {
                     animationType="fade"
                     transparent={true}
                     visible={modalVisible}
-                    onRequestClose={() => setModalVisible(false)}
+                    onRequestClose={() => {
+                        setModalVisible(false);
+                        setSelectedIndex(0); // Resetear el índice cuando se cierre el modal
+                    }}
+
                 >
                     <View style={stylesToilets.modalContainer}>
-                        <View style={stylesToilets.modalContent}>
-                            <Image source={require('../images/toilet.png')} style={stylesToilets.imageModal} />
-                            <Text style={stylesToilets.bathTitle}>{selectedBano.Nombre}</Text>
-                            <Text style={stylesToilets.bathStatus}>{selectedBano.Estado}</Text>
-                            {/* Aquí se asume que estas imágenes y textos son simbólicos */}
-                            <View style={stylesToilets.bathContainer}>
-                                <Image source={require('../images/papel-higienico.png')} style={stylesToilets.bathImage} />
-                                <Text style={stylesToilets.bathStatusText}>98%</Text>
-                            </View>
-                            <View style={stylesToilets.bathContainer}>
-                                <Image source={require('../images/jabon.png')} style={stylesToilets.bathImage} />
-                                <Text style={stylesToilets.bathStatusText}>62%</Text>
-                            </View>
 
-                            <TouchableOpacity
-                                style={stylesToilets.buttonBath}
-                                onPress={() => {
-                                    navigation.navigate('Sos', { banoId: selectedBano.BanoID }); // Navegar a SosScreen con BanoID
-                                    setModalVisible(false);
-                                }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={stylesToilets.buttonBathText}>Reportar</Text>
-                                    <View style={stylesLogin.viewSpace} />
-                                    <Icon
-                                        name='report'
-                                        color='#FEFEFE'
-                                    />
-                                </View>
+                        <View style={stylesToilets.modalOuterContainer}>
+                            <TouchableOpacity style={[stylesToilets.prevNextButton, stylesToilets.navButtonLeft]} onPress={prevBano}>
+                                <Icon
+                                    name='chevron-left'
+                                    color='#FEFEFE'
+                                    size={70}
+                                />
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#FF0303' }]} onPress={() => setModalVisible(false)}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={stylesToilets.closeButton}>Cerrar</Text>
-                                    <View style={stylesLogin.viewSpace} />
-                                    <Icon
-                                        name='close'
-                                        color='#FEFEFE'
-                                    />
+                            <View style={stylesToilets.modalContent}>
+                                <Image source={require('../images/toilet.png')} style={stylesToilets.imageModal} />
+                                <Text style={stylesToilets.bathTitle}>{selectedBano.Nombre}</Text>
+                                <Text style={stylesToilets.bathStatus}>{selectedBano.Estado}</Text>
+                                {/* Aquí se asume que estas imágenes y textos son simbólicos */}
+                                <View style={stylesToilets.bathContainer}>
+                                    <Image source={require('../images/papel-higienico.png')} style={stylesToilets.bathImage} />
+                                    <Text style={stylesToilets.bathStatusText}>98%</Text>
                                 </View>
+                                <View style={stylesToilets.bathContainer}>
+                                    <Image source={require('../images/jabon.png')} style={stylesToilets.bathImage} />
+                                    <Text style={stylesToilets.bathStatusText}>62%</Text>
+                                </View>
+
+                                <View style={{ width: '100%', alignItems: 'center' }}>
+                                    <TouchableOpacity
+                                        style={stylesToilets.buttonBath}
+                                        onPress={() => {
+                                            navigation.navigate('Sos', { banoId: selectedBano.BanoID }); // Navegar a SosScreen con BanoID
+                                            setModalVisible(false);
+                                        }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Text style={stylesToilets.buttonBathText}>Reportar</Text>
+                                            <View style={stylesLogin.viewSpace} />
+                                            <Icon
+                                                name='report'
+                                                color='#FEFEFE'
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#FF0303' }]} onPress={() => setModalVisible(false)}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Text style={stylesToilets.closeButton}>Cerrar</Text>
+                                            <View style={stylesLogin.viewSpace} />
+                                            <Icon
+                                                name='close'
+                                                color='#FEFEFE'
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+
+                            </View>
+
+                            <TouchableOpacity style={[stylesToilets.prevNextButton, stylesToilets.navButtonRight]} onPress={nextBano}>
+                                <Icon
+                                    name='chevron-right'
+                                    color='#FEFEFE'
+                                    size={70}
+                                />
                             </TouchableOpacity>
                         </View>
+
                     </View>
                 </Modal>
             )}
@@ -179,18 +251,22 @@ export const stylesToilets = StyleSheet.create({
     },
     modalContainer: {
         flex: 1,
+        flexDirection: 'row', // Alinea los botones a los lados
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Se cambió para mejorar la visibilidad del modal
+
+        paddingHorizontal: 20, // Espacio para no sobreponer los botones
     },
     modalContent: {
         width: isLargeScreen ? '50%' : '85%',  // Ajuste el ancho a 85% en pantallas pequeñas para más espacio
-        height: '100%',  // Altura máxima ajustada
+        height: '50%',  // Altura máxima ajustada
         backgroundColor: '#F2F3FE',
-        padding: 20,
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
+        paddingBottom: 40,
+        zIndex: -1,
     },
     closeButton: {
         fontSize: isLargeScreen ? 18 : 16,
@@ -234,5 +310,47 @@ export const stylesToilets = StyleSheet.create({
         color: '#FEFEFE',
         fontWeight: 'bold',
         fontSize: isLargeScreen ? 20 : 16,  // Ajustar el tamaño de la fuente del botón
+    },
+
+    menuOptions: {
+        paddingHorizontal: 20,
+    },
+    menuItem: {
+        marginRight: 20,
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        backgroundColor: '#007BFF', // Color de fondo de cada opción del menú
+        borderRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    menuText: {
+        color: '#ffffff', // Color del texto
+        fontWeight: 'bold',
+        fontSize: 16, // Tamaño del texto
+    },
+
+    modalOuterContainer: {
+        flex: 1,
+        flexDirection: 'row', // Alinea horizontalmente los elementos
+        alignItems: 'center', // Centra verticalmente los botones en el modal
+        justifyContent: 'center',
+        position: 'relative',
+    },
+    prevNextButton: {
+        borderRadius: 100,
+        backgroundColor: '#8594CB',
+    },
+    navButtonLeft: {
+        position: 'absolute',
+        left: -10,
+    },
+
+    navButtonRight: {
+        position: 'absolute',
+        right: -10,
     },
 });
