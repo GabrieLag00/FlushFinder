@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, Modal, Button } from 'react-native';
 import { stylesLogin } from '../LoginScreen';
 import Ubicacion, { stylesUbication } from '../UbicationScreen';
-import Header from '../../components/Header';
+import Header, { stylesHeader } from '../../components/Header';
 import NavBar, { stylesNavBar } from '../../components/NavBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images, useEdificios } from '../../components/ImagesBuildings';
@@ -82,6 +82,7 @@ function DashboardBuildings({ navigation }) {
   const handleReenable = () => {
     if (selectedEdificio && selectedEdificio.EdificioID) {
       socket.emit('habilitar-edificio', { edificioId: selectedEdificio.EdificioID });
+      setModalVisible(false);
     }
   };
 
@@ -99,6 +100,7 @@ function DashboardBuildings({ navigation }) {
   ];
 
   return (
+    <>
     <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
       <Header navigation={navigation} />
       <Text style={[stylesLogin.title, stylesUbication.titleUbication]}>Selecciona tu ubicación</Text>
@@ -106,18 +108,29 @@ function DashboardBuildings({ navigation }) {
       <View style={stylesUbication.rowContainer}>
         {edificios.map((edificio, index) => (
           <View key={edificio.EdificioID} style={stylesUbication.itemContainer}>
+
             <TouchableOpacity
               // style={stylesDashboardBuildings.overlayDashBuild}
               onPress={() => selectEdificio(edificio)}>
-              <Image source={images[index % images.length]} style={stylesUbication.image} />
+              <View style={stylesHeader.container}>
+                <Image source={images[index % images.length]} style={stylesUbication.image} />
+                <View style={stylesDashboardBuildings.overlayDashBuild}>
+                  <Icon
+                    name='cleaning-services'
+                    color='#FEFEFE'
+                    size={70}
+                  />
+                </View>
+              </View>
               <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{edificio.Nombre}</Text>
             </TouchableOpacity>
-            <Button title="Poner en mantenimiento" onPress={() => selectEdificio(edificio)} />
-            <Button title="Re-habilitar" onPress={handleReenable} color="green" />
+
+            {/*<Button title="Poner en mantenimiento" onPress={() => selectEdificio(edificio)} />*/}
+            {/*<Button title="Re-habilitar" onPress={handleReenable} color="green" />*/}
+
           </View>
         ))}
       </View>
-
 
       <Modal
         animationType="fade"
@@ -151,12 +164,23 @@ function DashboardBuildings({ navigation }) {
                 />
               </View>
 
-              <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#FF0303' }]} onPress={() => setModalVisible(false)}>
+              <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#34C66E' }]} onPress={handleReenable}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={stylesToilets.closeButton}>Cerrar</Text>
+                  <Text style={stylesToilets.closeButton}>Habilitar</Text>
                   <View style={stylesLogin.viewSpace} />
                   <Icon
-                    name='close'
+                    name='task-alt'
+                    color='#FEFEFE'
+                  />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#0374FF' }]} onPress={() => setModalVisible(false)}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={stylesToilets.closeButton}>Regresar</Text>
+                  <View style={stylesLogin.viewSpace} />
+                  <Icon
+                    name='keyboard-return'
                     color='#FEFEFE'
                   />
                 </View>
@@ -167,8 +191,10 @@ function DashboardBuildings({ navigation }) {
         </View>
       </Modal>
 
-
+      
     </ScrollView>
+    <NavBar navigation={navigation} />
+    </>
   );
 }
 
@@ -245,7 +271,12 @@ export const stylesDashboardBuildings = StyleSheet.create({
   },
 
   overlayDashBuild: {
-    backgroundColor: '#F6C910',
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(52, 199, 253, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopRightRadius: 4,
+    borderTopLeftRadius: 4,
 
   },
 
