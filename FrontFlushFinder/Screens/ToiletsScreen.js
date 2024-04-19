@@ -456,9 +456,9 @@ export const stylesToilets = StyleSheet.create({
         marginRight: 20,
         paddingVertical: 20,
         paddingHorizontal: 20,
-        backgroundColor: '#007BFF', // Color de fondo de cada opción del menú
+        backgroundColor: '#0374FF', // Color de fondo de cada opción del menú
         borderRadius: 20,
-        shadowColor: '#000',
+        shadowColor: '#34C7FD',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
