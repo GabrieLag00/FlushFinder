@@ -116,7 +116,7 @@ function LoginScreen({ navigation }) {
           </View>
 
 
-          <View style={stylesLogin.buttonContainer}>
+          {/*} <View style={stylesLogin.buttonContainer}>
             <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('Ubication')}>
               <Text style={stylesLogin.buttonText}>Ubicacion</Text>
             </TouchableOpacity>
@@ -132,7 +132,7 @@ function LoginScreen({ navigation }) {
             <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('DashboardBuildings')}>
               <Text style={stylesLogin.buttonText}>Edificos Mio</Text>
             </TouchableOpacity>
-          </View>
+          </View>*/}
 
         </View>
 
