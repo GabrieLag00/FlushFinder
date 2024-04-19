@@ -381,6 +381,7 @@ export const stylesToilets = StyleSheet.create({
         fontSize: isLargeScreen ? 35 : 22,  // Ajustar el tamaño de fuente para el estado
         fontWeight: 'bold',
         color: '#71D6B1',
+        textAlign:'center',
     },
     bathStatusText: {
         fontSize: 18,

@@ -115,11 +115,30 @@ function LoginScreen({ navigation }) {
             </TouchableOpacity>
           </View>
 
+
+          <View style={stylesLogin.buttonContainer}>
+            <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('Ubication')}>
+              <Text style={stylesLogin.buttonText}>Ubicacion</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={stylesLogin.buttonContainer}>
+            <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('HomeBuildings')}>
+              <Text style={stylesLogin.buttonText}>Edificos</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={stylesLogin.buttonContainer}>
+            <TouchableOpacity style={stylesLogin.button} onPress={() => navigation.navigate('DashboardBuildings')}>
+              <Text style={stylesLogin.buttonText}>Edificos Mio</Text>
+            </TouchableOpacity>
+          </View>
+
         </View>
 
       </View>
 
-      
+
 
     </View>
   );

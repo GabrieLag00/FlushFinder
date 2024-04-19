@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 const { width } = Dimensions.get('window');
 const isLargeScreen = width > 600;
 
-const socket = io("http://10.10.50.21:8765");
+const socket = io("http://192.168.0.190:8765");
 
 function Ubicacion({ navigation }) {
   const [edificios, setEdificios] = useState([]);
