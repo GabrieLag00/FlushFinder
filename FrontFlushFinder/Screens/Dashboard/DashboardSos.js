@@ -5,7 +5,8 @@ import Header from '../../components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesDashboard } from './DashboardScreen';
 import NavBar from '../../components/NavBar';
-import {getSOS, borrarSOS, borrarTodosSOS} from '../../api';
+import { getSOS, borrarSOS, borrarTodosSOS } from '../../api';
+import { stylesUbication } from '../UbicationScreen';
 
 const socket = io("https://railway-production-2a8c.up.railway.app");
 
@@ -45,7 +46,7 @@ function DashboardSos({ navigation }) {
         'Reportes sin atender',
         'No puedes salir sin haber atendido todos los reportes. ¿Deseas marcar todos como atendidos?',
         [
-          { text: "Cancelar", style: 'cancel', onPress: () => {} },
+          { text: "Cancelar", style: 'cancel', onPress: () => { } },
           {
             text: 'Marcar Todos como Atendidos',
             style: 'destructive',
@@ -80,7 +81,7 @@ function DashboardSos({ navigation }) {
         if (!existingReport) {
           return [...prevReports, newReport];
         } else {
-          return prevReports.map(report => 
+          return prevReports.map(report =>
             report.SosReportID === newReport.SosReportID ? newReport : report
           );
         }
@@ -111,8 +112,12 @@ function DashboardSos({ navigation }) {
   return (
     <SafeAreaView style={stylesDashboard.containerSafeArea}>
       <Header navigation={navigation} />
+
+
       <Button title="Marcar Todos como Atendidos" onPress={handleDeleteAllSos} color="red" />
-      <ScrollView contentContainerStyle={stylesDashboard.bodyDash}>
+      <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
+
+      <View style={stylesUbication.rowContainer}>
         {sosReports.map((report, index) => (
           <View key={index} style={stylesSos.card}>
             <Text style={stylesSos.label}>Usuario: {report.UsuarioID}</Text>
@@ -136,6 +141,8 @@ function DashboardSos({ navigation }) {
             <Button title="Atendido" onPress={() => handleDeleteSos(report.SosReportID)} />
           </View>
         ))}
+
+</View>
       </ScrollView>
       <NavBar navigation={navigation} />
     </SafeAreaView>

@@ -9,7 +9,7 @@ import io from 'socket.io-client';
 
 const SOCKET_SERVER_URL = 'https://railway-production-2a8c.up.railway.app';
 
-const DashboardScreen = ({ navigation }) => {
+function DashboardScreen({ navigation }) {
   const [distanceData, setDistanceData] = useState([]);
   const [bano1, setBano1] = useState('Esperando datos...');
   const [bano2, setBano2] = useState('Esperando datos...');
@@ -46,33 +46,39 @@ const DashboardScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <SafeAreaView style={stylesUbication.containerScrollView}>
-      <Header navigation={navigation} />
-      <View style={stylesDashboard.bodyDash}>
-      <Text style={stylesDashboard.title}>Disponiblidad y Administracion</Text>
-        <View style={stylesDashboard.sensorContainer}>
-        <Text style={stylesDashboard.title}>Datos Baño1</Text>
-          <Text style={stylesDashboard.sensorText}>Baño 1: {bano1}</Text>
-          <Text style={stylesDashboard.title}>Datos Baño2</Text>
-          <Text style={stylesDashboard.sensorText}>Baño 2: {bano2}</Text>
-          <Text style={stylesDashboard.title}>Datos del Papel</Text>
-          <Text style={stylesDashboard.sensorText}>Papel Higiénico: {papel}%</Text>
-          <Text style={stylesDashboard.title}>Datos del Jabon</Text>
-          <Text style={stylesDashboard.sensorText}>Jabón: {jabon}%</Text>
-        </View>
-        <FlatList
-          data={distanceData}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <View style={stylesDashboard.row}>
-              <Text style={stylesDashboard.distance}>{item} cm</Text>
+    <>
+      <SafeAreaView style={stylesDashboard.containerSafeArea}>
+        <Header navigation={navigation} />
+        <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
+
+          <View style={stylesDashboard.bodyDash}>
+            <Text style={stylesDashboard.title}>Disponiblidad y Administracion</Text>
+            <View style={stylesDashboard.sensorContainer}>
+              <Text style={stylesDashboard.title}>Datos Baño1</Text>
+              <Text style={stylesDashboard.sensorText}>Baño 1: {bano1}</Text>
+              <Text style={stylesDashboard.title}>Datos Baño2</Text>
+              <Text style={stylesDashboard.sensorText}>Baño 2: {bano2}</Text>
+              <Text style={stylesDashboard.title}>Datos del Papel</Text>
+              <Text style={stylesDashboard.sensorText}>Papel Higiénico: {papel}%</Text>
+              <Text style={stylesDashboard.title}>Datos del Jabon</Text>
+              <Text style={stylesDashboard.sensorText}>Jabón: {jabon}%</Text>
             </View>
-            
-          )}
-        />
-      </View>
-      <NavBar navigation={navigation} />
-    </SafeAreaView>
+            <Text
+              data={distanceData}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View style={stylesDashboard.row}>
+                  <Text style={stylesDashboard.distance}>{item} cm</Text>
+                </View>
+
+              )}
+            />
+          </View>
+
+        </ScrollView>
+        <NavBar navigation={navigation} />
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -99,14 +105,14 @@ export const stylesDashboard = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
-    minWidth: '45%', 
+    minWidth: '45%',
     textAlign: 'center',
     fontSize: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    elevation: 3, 
+    elevation: 3,
   },
   title: {
     fontSize: 20,
