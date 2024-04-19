@@ -6,6 +6,7 @@ import Header from '../../components/Header';
 import NavBar, { stylesNavBar } from '../../components/NavBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import io from 'socket.io-client';
+import { stylesToilets } from '../ToiletsScreen';
 
 const SOCKET_SERVER_URL = 'https://railway-production-2a8c.up.railway.app';
 
@@ -47,37 +48,43 @@ function DashboardScreen({ navigation }) {
 
   return (
     <>
-      <SafeAreaView style={stylesDashboard.containerSafeArea}>
+      <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
         <Header navigation={navigation} />
-        <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
 
-          <View style={stylesDashboard.bodyDash}>
-            <Text style={stylesDashboard.title}>Disponiblidad y Administracion</Text>
+
+        <View style={stylesUbication.rowContainer}>
+          <Text style={stylesLogin.title}>Disponiblidad y Administracion</Text>
+          <View style={stylesDashboard.cardContainer}>
+
             <View style={stylesDashboard.sensorContainer}>
-              <Text style={stylesDashboard.title}>Datos Baño1</Text>
-              <Text style={stylesDashboard.sensorText}>Baño 1: {bano1}</Text>
-              <Text style={stylesDashboard.title}>Datos Baño2</Text>
-              <Text style={stylesDashboard.sensorText}>Baño 2: {bano2}</Text>
-              <Text style={stylesDashboard.title}>Datos del Papel</Text>
-              <Text style={stylesDashboard.sensorText}>Papel Higiénico: {papel}%</Text>
-              <Text style={stylesDashboard.title}>Datos del Jabon</Text>
-              <Text style={stylesDashboard.sensorText}>Jabón: {jabon}%</Text>
+              <Text style={[stylesToilets.bathTitle, {textAlign:'left', marginBottom:10, color:'#3451C6'}]}>Datos Baño1</Text>
+              <Text style={[stylesToilets.bathStatusText]}>Baño 1: {bano1}</Text>
+              <Text style={[stylesToilets.bathTitle, {textAlign:'left', marginBottom:10, color:'#3451C6'}]}>Datos Baño2</Text>
+              <Text style={[stylesToilets.bathStatusText]}>Baño 2: {bano2}</Text>
+              <Text style={[stylesToilets.bathTitle, {textAlign:'left', marginBottom:10, color:'#3451C6'}]}>Datos del Papel</Text>
+              <Text style={[stylesToilets.bathStatusText]}>Papel Higiénico: {papel}%</Text>
+              <Text style={[stylesToilets.bathTitle, {textAlign:'left', marginBottom:10, color:'#3451C6'}]}>Datos del Jabón</Text>
+              <Text style={[stylesToilets.bathStatusText]}>Jabón: {jabon}%</Text>
             </View>
-            <Text
-              data={distanceData}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View style={stylesDashboard.row}>
-                  <Text style={stylesDashboard.distance}>{item} cm</Text>
-                </View>
-
-              )}
-            />
+            {/*<TouchableOpacity style={stylesDashboard.button}>
+                <Text style={stylesDashboard.buttonText}>Learn More</Text>
+                </TouchableOpacity>*/}
           </View>
 
-        </ScrollView>
-        <NavBar navigation={navigation} />
-      </SafeAreaView>
+          <Text
+            data={distanceData}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={stylesDashboard.row}>
+                <Text style={stylesDashboard.distance}>{item} cm</Text>
+              </View>
+
+            )}
+          />
+        </View>
+
+      </ScrollView>
+      <NavBar navigation={navigation} />
     </>
   );
 };
@@ -98,7 +105,7 @@ export const stylesDashboard = StyleSheet.create({
     padding: 20,
   },
   sensorContainer: {
-    marginBottom: 20,
+    backgroundColor: 'red'
   },
   sensorText: {
     backgroundColor: '#FFFFFF',
@@ -128,6 +135,46 @@ export const stylesDashboard = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+
+
+
+  cardContainer: {
+    backgroundColor: '#F2F3FE',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    marginHorizontal: 20,
+    marginVertical: 10,
+    padding: 15,
+  },
+  sensorContainer: {
+    marginBottom: 20, // Espacio antes del botón
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  sensorText: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  }
 });
 
 export default DashboardScreen;

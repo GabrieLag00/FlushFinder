@@ -85,11 +85,11 @@ function SosScreen({ navigation, route }) {
 
       <Header navigation={navigation} />
 
-      <View style={stylesSos.buttonContainer}>
+      {/*<View style={stylesSos.buttonContainer}>
         <TouchableOpacity style={stylesSos.buttonSos} onPress={() => navigation.goBack()}>
           <Image style={stylesSos.imgReturn} source={imageReturn} />
         </TouchableOpacity>
-      </View>
+      </View>*/}
 
       <Text style={stylesLogin.title}>Quejas y sugerencias</Text>
 

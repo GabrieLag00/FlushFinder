@@ -81,8 +81,8 @@ function DashboardBuildings({ navigation }) {
 
   const handleReenable = () => {
     if (selectedEdificio && selectedEdificio.EdificioID) {
+      console.log(`Rehabilitar edificio ${selectedEdificio.EdificioID}`); // Debugging de rehabilitación
       socket.emit('habilitar-edificio', { edificioId: selectedEdificio.EdificioID });
-      setModalVisible(false);
     }
   };
 
@@ -101,99 +101,99 @@ function DashboardBuildings({ navigation }) {
 
   return (
     <>
-    <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
-      <Header navigation={navigation} />
-      <Text style={[stylesLogin.title, stylesUbication.titleUbication]}>Selecciona tu ubicación</Text>
+      <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
+        <Header navigation={navigation} />
+        <Text style={[stylesLogin.title, stylesUbication.titleUbication]}>Selecciona tu ubicación</Text>
 
-      <View style={stylesUbication.rowContainer}>
-        {edificios.map((edificio, index) => (
-          <View key={edificio.EdificioID} style={stylesUbication.itemContainer}>
+        <View style={stylesUbication.rowContainer}>
+          {edificios.map((edificio, index) => (
+            <View key={edificio.EdificioID} style={stylesUbication.itemContainer}>
 
-            <TouchableOpacity
-              // style={stylesDashboardBuildings.overlayDashBuild}
-              onPress={() => selectEdificio(edificio)}>
-              <View style={stylesHeader.container}>
-                <Image source={images[index % images.length]} style={stylesUbication.image} />
-                <View style={stylesDashboardBuildings.overlayDashBuild}>
-                  <Icon
-                    name='cleaning-services'
-                    color='#FEFEFE'
-                    size={70}
-                  />
+              <TouchableOpacity
+                // style={stylesDashboardBuildings.overlayDashBuild}
+                onPress={() => selectEdificio(edificio)}>
+                <View style={stylesHeader.container}>
+                  <Image source={images[index % images.length]} style={stylesUbication.image} />
+                  <View style={stylesDashboardBuildings.overlayDashBuild}>
+                    <Icon
+                      name='cleaning-services'
+                      color='#FEFEFE'
+                      size={70}
+                    />
+                  </View>
                 </View>
-              </View>
-              <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{edificio.Nombre}</Text>
-            </TouchableOpacity>
-
-            {/*<Button title="Poner en mantenimiento" onPress={() => selectEdificio(edificio)} />*/}
-            {/*<Button title="Re-habilitar" onPress={handleReenable} color="green" />*/}
-
-          </View>
-        ))}
-      </View>
-
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={stylesToilets.modalContainer}>
-          <View style={stylesDashboardBuildings.centeredView}>
-            <View style={stylesDashboardBuildings.modalView}>
-              <Text style={stylesToilets.bathTitle}>Baños que requieren mantenimiento</Text>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Icon
-                  name='man'
-                  color='#8594CB'
-                  size={70}
-                  onPress={() => handleMaintenanceSelection('Hombres')}
-                />
-                <Icon
-                  name='woman'
-                  color='#8594CB'
-                  size={70}
-                  onPress={() => handleMaintenanceSelection('Mujeres')}
-                />
-                <Icon
-                  name='wc'
-                  color='#8594CB'
-                  size={70}
-                  onPress={() => handleMaintenanceSelection('Ambos')}
-                />
-              </View>
-
-              <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#34C66E' }]} onPress={handleReenable}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={stylesToilets.closeButton}>Habilitar</Text>
-                  <View style={stylesLogin.viewSpace} />
-                  <Icon
-                    name='task-alt'
-                    color='#FEFEFE'
-                  />
-                </View>
+                <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{edificio.Nombre}</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#0374FF' }]} onPress={() => setModalVisible(false)}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={stylesToilets.closeButton}>Regresar</Text>
-                  <View style={stylesLogin.viewSpace} />
-                  <Icon
-                    name='keyboard-return'
-                    color='#FEFEFE'
-                  />
-                </View>
-              </TouchableOpacity>
+              {/*<Button title="Poner en mantenimiento" onPress={() => selectEdificio(edificio)} />*/}
+              {/*<Button title="Re-habilitar" onPress={handleReenable} color="green" />*/}
 
             </View>
-          </View>
+          ))}
         </View>
-      </Modal>
 
-      
-    </ScrollView>
-    <NavBar navigation={navigation} />
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={stylesToilets.modalContainer}>
+            <View style={stylesDashboardBuildings.centeredView}>
+              <View style={stylesDashboardBuildings.modalView}>
+                <Text style={stylesToilets.bathTitle}>Baños que requieren mantenimiento</Text>
+
+                <View style={{ flexDirection: 'row' }}>
+                  <Icon
+                    name='man'
+                    color='#8594CB'
+                    size={70}
+                    onPress={() => handleMaintenanceSelection('Hombres')}
+                  />
+                  <Icon
+                    name='woman'
+                    color='#8594CB'
+                    size={70}
+                    onPress={() => handleMaintenanceSelection('Mujeres')}
+                  />
+                  <Icon
+                    name='wc'
+                    color='#8594CB'
+                    size={70}
+                    onPress={() => handleMaintenanceSelection('Ambos')}
+                  />
+                </View>
+
+                <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#34C66E' }]} onPress={handleReenable}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={stylesToilets.closeButton}>Habilitar</Text>
+                    <View style={stylesLogin.viewSpace} />
+                    <Icon
+                      name='task-alt'
+                      color='#FEFEFE'
+                    />
+                  </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#0374FF' }]} onPress={() => setModalVisible(false)}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={stylesToilets.closeButton}>Regresar</Text>
+                    <View style={stylesLogin.viewSpace} />
+                    <Icon
+                      name='keyboard-return'
+                      color='#FEFEFE'
+                    />
+                  </View>
+                </TouchableOpacity>
+
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+
+      </ScrollView>
+      <NavBar navigation={navigation} />
     </>
   );
 }

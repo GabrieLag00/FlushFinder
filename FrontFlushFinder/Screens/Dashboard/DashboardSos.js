@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, Button, Alert } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, Button, Alert, TouchableOpacity } from 'react-native';
 import io from 'socket.io-client';
 import Header from '../../components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,6 +7,9 @@ import { stylesDashboard } from './DashboardScreen';
 import NavBar from '../../components/NavBar';
 import { getSOS, borrarSOS, borrarTodosSOS } from '../../api';
 import { stylesUbication } from '../UbicationScreen';
+import { stylesToilets } from '../ToiletsScreen';
+import { stylesLogin } from '../LoginScreen';
+import { Icon } from 'react-native-elements';
 
 const socket = io("https://railway-production-2a8c.up.railway.app");
 
@@ -113,36 +116,57 @@ function DashboardSos({ navigation }) {
     <SafeAreaView style={stylesDashboard.containerSafeArea}>
       <Header navigation={navigation} />
 
-
-      <Button title="Marcar Todos como Atendidos" onPress={handleDeleteAllSos} color="red" />
+      <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#0374FF', marginVertical: 30 }]} onPress={handleDeleteAllSos}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={stylesToilets.closeButton}>Marcar todos atendidos</Text>
+          <View style={stylesLogin.viewSpace} />
+          <Icon
+            name='checklist-rtl'
+            color='#FEFEFE'
+          />
+        </View>
+      </TouchableOpacity>
       <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
 
-      <View style={stylesUbication.rowContainer}>
-        {sosReports.map((report, index) => (
-          <View key={index} style={stylesSos.card}>
-            <Text style={stylesSos.label}>Usuario: {report.UsuarioID}</Text>
-            <Text style={stylesSos.label}>Nombre: {report.Nombre}</Text>
-            <Text style={stylesSos.label}>Email: {report.Email}</Text>
-            <Text style={stylesSos.label}>Problema: {report.Problema}</Text>
-            <Text style={stylesSos.label}>Rating de Limpieza:</Text>
-            <View style={stylesSos.imageContainer}>
-              {[...Array(report.RatingLimpieza)].map((_, i) => (
-                <Image key={i} source={jabonFilled} style={stylesSos.starImage} />
-              ))}
-              {[...Array(5 - report.RatingLimpieza)].map((_, i) => (
-                <Image key={i} source={jabonEmpty} style={stylesSos.starImage} />
-              ))}
-            </View>
-            <Text style={stylesSos.label}>Papel Faltante: {report.Papel ? 'Sí' : 'No'}</Text>
-            <Image source={report.Papel ? papelFilled : papelEmpty} style={stylesSos.iconImage} />
-            <Text style={stylesSos.label}>Jabón Faltante: {report.Jabon ? 'Sí' : 'No'}</Text>
-            <Image source={report.Jabon ? jabonFilled : jabonEmpty} style={stylesSos.iconImage} />
-            <Text style={stylesSos.label}>Comentarios: {report.Comentarios}</Text>
-            <Button title="Atendido" onPress={() => handleDeleteSos(report.SosReportID)} />
-          </View>
-        ))}
+        <View style={stylesUbication.rowContainer}>
+          {sosReports.map((report, index) => (
+            <View key={index} style={stylesSos.card}>
+              <Text style={stylesSos.label}>Usuario: {report.UsuarioID}</Text>
+              <Text style={stylesSos.label}>Nombre: {report.Nombre}</Text>
+              <Text style={stylesSos.label}>Email: {report.Email}</Text>
+              <Text style={stylesSos.label}>Problema: {report.Problema}</Text>
+              <Text style={stylesSos.label}>Rating de Limpieza:</Text>
+              <View style={stylesSos.imageContainer}>
+                {[...Array(report.RatingLimpieza)].map((_, i) => (
+                  <Image key={i} source={jabonFilled} style={stylesSos.starImage} />
+                ))}
+                {[...Array(5 - report.RatingLimpieza)].map((_, i) => (
+                  <Image key={i} source={jabonEmpty} style={stylesSos.starImage} />
+                ))}
+              </View>
+              <Text style={stylesSos.label}>Papel Faltante: {report.Papel ? 'Sí' : 'No'}</Text>
+              <Image source={report.Papel ? papelFilled : papelEmpty} style={stylesSos.iconImage} />
+              <Text style={stylesSos.label}>Jabón Faltante: {report.Jabon ? 'Sí' : 'No'}</Text>
+              <Image source={report.Jabon ? jabonFilled : jabonEmpty} style={stylesSos.iconImage} />
+              <Text style={stylesSos.label}>Comentarios: {report.Comentarios}</Text>
 
-</View>
+              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#34C66E' }]} onPress={() => handleDeleteSos(report.SosReportID)}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={stylesToilets.closeButton}>Atendido</Text>
+                    <View style={stylesLogin.viewSpace} />
+                    <Icon
+                      name='check'
+                      color='#FEFEFE'
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+            </View>
+          ))}
+
+        </View>
       </ScrollView>
       <NavBar navigation={navigation} />
     </SafeAreaView>
