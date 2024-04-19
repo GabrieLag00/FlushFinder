@@ -116,7 +116,7 @@ function DashboardSos({ navigation }) {
     <SafeAreaView style={stylesDashboard.containerSafeArea}>
       <Header navigation={navigation} />
 
-      <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#0374FF', marginVertical: 30 }]} onPress={handleDeleteAllSos}>
+      <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#34C66E', marginVertical: 30 }]} onPress={handleDeleteAllSos}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={stylesToilets.closeButton}>Marcar todos atendidos</Text>
           <View style={stylesLogin.viewSpace} />
@@ -151,7 +151,7 @@ function DashboardSos({ navigation }) {
               <Text style={stylesSos.label}>Comentarios: {report.Comentarios}</Text>
 
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#34C66E' }]} onPress={() => handleDeleteSos(report.SosReportID)}>
+                <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#0374FF' }]} onPress={() => handleDeleteSos(report.SosReportID)}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={stylesToilets.closeButton}>Atendido</Text>
                     <View style={stylesLogin.viewSpace} />
