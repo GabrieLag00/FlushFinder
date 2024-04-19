@@ -7,7 +7,7 @@ import NavBar, { stylesNavBar } from '../../components/NavBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import io from 'socket.io-client';
 
-const SOCKET_SERVER_URL = 'http://localhost:8765';
+const SOCKET_SERVER_URL = 'http://192.168.1.70:8765';
 
 const DashboardScreen = ({ navigation }) => {
   const [distanceData, setDistanceData] = useState([]);
@@ -49,14 +49,17 @@ const DashboardScreen = ({ navigation }) => {
     <SafeAreaView style={stylesUbication.containerScrollView}>
       <Header navigation={navigation} />
       <View style={stylesDashboard.bodyDash}>
-        <Text>pendejo aldair cachetes de marrana </Text>
+      <Text style={stylesDashboard.title}>Disponiblidad y Administracion</Text>
         <View style={stylesDashboard.sensorContainer}>
+        <Text style={stylesDashboard.title}>Datos Baño1</Text>
           <Text style={stylesDashboard.sensorText}>Baño 1: {bano1}</Text>
+          <Text style={stylesDashboard.title}>Datos Baño2</Text>
           <Text style={stylesDashboard.sensorText}>Baño 2: {bano2}</Text>
-          <Text style={stylesDashboard.sensorText}>Papel Higiénico: {papel}</Text>
-          <Text style={stylesDashboard.sensorText}>Jabón: {jabon}</Text>
+          <Text style={stylesDashboard.title}>Datos del Papel</Text>
+          <Text style={stylesDashboard.sensorText}>Papel Higiénico: {papel}%</Text>
+          <Text style={stylesDashboard.title}>Datos del Jabon</Text>
+          <Text style={stylesDashboard.sensorText}>Jabón: {jabon}%</Text>
         </View>
-        <Text style={stylesDashboard.title}>Tabla de Distancia</Text>
         <FlatList
           data={distanceData}
           keyExtractor={(item, index) => index.toString()}
@@ -64,6 +67,7 @@ const DashboardScreen = ({ navigation }) => {
             <View style={stylesDashboard.row}>
               <Text style={stylesDashboard.distance}>{item} cm</Text>
             </View>
+            
           )}
         />
       </View>
@@ -91,8 +95,18 @@ export const stylesDashboard = StyleSheet.create({
     marginBottom: 20,
   },
   sensorText: {
-    fontSize: 18,
+    backgroundColor: '#FFFFFF',
+    padding: 15,
+    borderRadius: 10,
     marginBottom: 10,
+    minWidth: '45%', 
+    textAlign: 'center',
+    fontSize: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3, 
   },
   title: {
     fontSize: 20,

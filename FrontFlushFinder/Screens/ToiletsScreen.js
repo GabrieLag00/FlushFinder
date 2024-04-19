@@ -6,8 +6,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import { getBanosDelEdificio } from '../api';
-
 import { Icon } from 'react-native-elements';
+import io from 'socket.io-client';
+
+const socket = io("http://192.168.1.70:8765");
 
 const { width, height } = Dimensions.get('window');
 const isLargeScreen = width > 600;
@@ -60,9 +62,14 @@ function Banos({ navigation, route }) {
     const [banos, setBanos] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [userGender, setUserGender] = useState(null);
-
+    const [banoStatus, setBanoStatus] = useState('Esperando datos...');
+    const [papelPercent, setPapelPercent] = useState('Esperando datos...');
+    const [jabonPercent, setJabonPercent] = useState('Esperando datos...');
+    const [banoH, setBanoH] = useState('Esperando datos...');
+    const [banoM, setBanoM] = useState('Esperando datos...');
     const [selectedBano, setSelectedBano] = useState(null); // Cambiado para manejar el baño seleccionado
     const [selectedIndex, setSelectedIndex] = useState(0); // Index del baño seleccionado
+
     const nextBano = () => {
         // Solo avanzar si no es el último baño
         if (selectedIndex < banos.length - 1) {
@@ -71,6 +78,7 @@ function Banos({ navigation, route }) {
             setSelectedBano(banos[nextIndex]);
         }
     };
+
     const prevBano = () => {
         // Solo retroceder si no es el primer baño
         if (selectedIndex > 0) {
@@ -79,6 +87,23 @@ function Banos({ navigation, route }) {
             setSelectedBano(banos[prevIndex]);
         }
     };
+
+    useEffect(() => {
+        socket.on('Exit/30', data => {
+          setPapelPercent(data);
+        });
+        socket.on('Exit/40', data => {
+          setJabonPercent(data);
+        });
+        socket.on('Exit/10', setBanoH);
+        socket.on('Exit/20', setBanoM);
+    
+        return () => {
+          socket.off('Exit/30');
+          socket.off('Exit/40');
+        };
+      }, []);
+
     useEffect(() => {
         if (banos.length > 0 && selectedIndex >= 0 && selectedIndex < banos.length) {
             setSelectedBano(banos[selectedIndex]);
@@ -88,15 +113,34 @@ function Banos({ navigation, route }) {
 
 
     useEffect(() => {
-        // Recuperar el género del usuario de AsyncStorage
         const fetchUserGender = async () => {
             const userDataJson = await AsyncStorage.getItem('userData');
-            const userData = JSON.parse(userDataJson);
-            setUserGender(userData.usuario.genero); // Asegúrate de que el género esté almacenado correctamente
+            if (userDataJson) {
+                const userData = JSON.parse(userDataJson);
+                setUserGender(userData.usuario.genero);
+                setupSocketListeners(userData.usuario.genero);
+            }
         };
 
         fetchUserGender();
-    }, []);
+        return () => {
+            socket.off('Exit/10');
+            socket.off('Exit/20');
+        };
+      }, []);
+
+      const setupSocketListeners = (gender) => {
+        const topic = gender === 'Hombre' ? 'Exit/10' : 'Exit/20';
+        socket.on(topic, (data) => {
+            setBanoStatus(data);
+        });
+    };
+
+    const getStatusStyle = (status) => ({
+        color: status === 'Ocupado' ? '#FF0000' : '#00FF00',
+        fontWeight: 'bold',
+        fontSize: 18,
+    });
 
 
     useEffect(() => {
@@ -196,15 +240,17 @@ function Banos({ navigation, route }) {
                             <View style={stylesToilets.modalContent}>
                                 <Image source={require('../images/toilet.png')} style={stylesToilets.imageModal} />
                                 <Text style={stylesToilets.bathTitle}>{selectedBano.Nombre}</Text>
-                                <Text style={stylesToilets.bathStatus}>{selectedBano.Estado}</Text>
-                                {/* Aquí se asume que estas imágenes y textos son simbólicos */}
+                                <Text style={getStatusStyle(banoStatus)}>
+                                 {banoStatus}
+                                 </Text>
+
                                 <View style={stylesToilets.bathContainer}>
                                     <Image source={require('../images/papel-higienico.png')} style={stylesToilets.bathImage} />
-                                    <Text style={stylesToilets.bathStatusText}>98%</Text>
+                                    <Text style={stylesToilets.bathStatusText}>{jabonPercent}%</Text>
                                 </View>
                                 <View style={stylesToilets.bathContainer}>
                                     <Image source={require('../images/jabon.png')} style={stylesToilets.bathImage} />
-                                    <Text style={stylesToilets.bathStatusText}>62%</Text>
+                                    <Text style={stylesToilets.bathStatusText}>{papelPercent}%</Text>
                                 </View>
 
                                 <View style={{ width: '100%', alignItems: 'center' }}>
@@ -257,6 +303,14 @@ function Banos({ navigation, route }) {
 export default Banos;
 
 export const stylesToilets = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 20,
+    },
+    status: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
     textContainer: {
         fontSize: isLargeScreen ? 30 : 20,  // Ajustar el tamaño del texto para grandes pantallas
         paddingVertical: isLargeScreen ? 15 : 10,
