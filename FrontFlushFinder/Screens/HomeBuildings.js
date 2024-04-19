@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import {getEdificios} from '../api'
 import io from 'socket.io-client';
 
-const socket = io("http://10.10.50.21:8765");
+const socket = io("http://192.168.100.65:8765");
 
 
 function HomeBuildings({ navigation }) {
@@ -81,15 +81,15 @@ function HomeBuildings({ navigation }) {
   ];
 
   return (
-    <ScrollView contentContainerStyle={stylesUbication.containerScrollView}>
+    <ScrollView contentContainerStyle={stylesHB.containerScrollView}>
     <Header navigation={navigation} />
-    <Text style={[stylesLogin.title, stylesUbication.titleUbication]}>Selecciona tu ubicación</Text>
-    <View style={stylesUbication.rowContainer}>
+    <Text style={[stylesLogin.title, stylesHB.titleUbication]}>Selecciona tu ubicación</Text>
+    <View style={stylesHB.rowContainer}>
       {edificios.map((edificio, index) => (
-        <View key={edificio.EdificioID} style={stylesUbication.itemContainer}>
+        <View key={edificio.EdificioID} style={stylesHB.itemContainer}>
           <TouchableOpacity onPress={() => selectEdificio(edificio)}>
-            <Image source={images[index % images.length]} style={stylesUbication.image} />
-            <Text style={[stylesUbication.textUbication, stylesUbication.textContainer]}>{edificio.Nombre}</Text>
+            <Image source={images[index % images.length]} style={stylesHB.image} />
+            <Text style={[stylesHB.textUbication, stylesHB.textContainer]}>{edificio.Nombre}</Text>
           </TouchableOpacity>
           <Button title="Poner en mantenimiento" onPress={() => selectEdificio(edificio)} />
           <Button title="Re-habilitar" onPress={handleReenable} color="green" />
@@ -102,9 +102,9 @@ function HomeBuildings({ navigation }) {
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}
     >
-      <View style={stylesUbication.centeredView}>
-        <View style={stylesUbication.modalView}>
-          <Text style={stylesUbication.modalText}>Selecciona qué baños poner en mantenimiento:</Text>
+      <View style={stylesHB.centeredView}>
+        <View style={stylesHB.modalView}>
+          <Text style={stylesHB.modalText}>Selecciona qué baños poner en mantenimiento:</Text>
           <Button title="Hombres" onPress={() => handleMaintenanceSelection('Hombres')} />
           <Button title="Mujeres" onPress={() => handleMaintenanceSelection('Mujeres')} />
           <Button title="Ambos" onPress={() => handleMaintenanceSelection('Ambos')} />
@@ -119,7 +119,7 @@ function HomeBuildings({ navigation }) {
 export default HomeBuildings;
 
 
-export const stylesUbication = StyleSheet.create({
+export const stylesHB = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
