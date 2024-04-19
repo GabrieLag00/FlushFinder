@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import io from 'socket.io-client';
 
 // Conexión al servidor WebSocket. Asegúrate de usar la dirección correcta.
-const socket = io("http://localhost:8765");
+const socket = io("http://192.168.1.70:8765");
 
 const DatosSensoresScreen = () => {
   const [bano1, setBano1] = useState('Esperando datos...');

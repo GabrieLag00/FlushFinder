@@ -7,6 +7,9 @@ import '../envConfig.js'; // Asegura que este import esté al principio
 import http from 'http';
 import { habilitarManejoEdificios } from './controllers/conserjesSockets.js';
 import { habilitarManejoSosReports } from './controllers/sosSockets.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Configuración MQTT - Asegúrate de que el URL esté en el formato correcto
 const mqttClient = connect('mqtt://broker.emqx.io:1883');
@@ -19,6 +22,7 @@ const io = new WebsocketServer(httpServerForSocketIO, {
     origin: '*',  // Configura esto adecuadamente según tus necesidades de seguridad
   },
 });
+
 
 mqttClient.on('connect', () => {
   console.log('Conectado al broker MQTT');
@@ -33,6 +37,10 @@ io.on('connection', (socket) => {
   });
 });
 
+mqttClient.on('message', (topic, message) => {
+  console.log(`Mensaje recibido en el tópico ${topic}: ${message.toString()}`);
+  io.emit(topic, message.toString());
+});
 
 // Iniciar servidor WebSocket en el puerto especificado en .env
 httpServerForSocketIO.listen(process.env.SOCKET_IO_PORT, () => {
