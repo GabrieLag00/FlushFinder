@@ -2,12 +2,12 @@ import axios from 'axios';
 
 
 
-const API_URL_EDIFICIOS = 'http://192.168.0.190:5000/api/edificios/edificios';
-const API_URL_LOGIN_CONSERJES = 'http://192.168.0.190:5000/api/conserjes/login';
-const API_URL_CONSERJES = "http://192.168.0.190:5000/api/conserjes/conserjes";
-const API_URL_REGISTRO = 'http://192.168.0.190:5000/api/users/register';
-const API_URL_LOGIN = 'http://192.168.0.190:5000/api/users/login';
-const API_URL_SOS = 'http://192.168.0.190:5000/api/sos/sos';
+const API_URL_EDIFICIOS = 'https://railway-production-2a8c.up.railway.app/api/edificios/edificios';
+const API_URL_LOGIN_CONSERJES = 'https://railway-production-2a8c.up.railway.app/api/conserjes/login';
+const API_URL_CONSERJES = "https://railway-production-2a8c.up.railway.app/api/conserjes/conserjes";
+const API_URL_REGISTRO = 'https://railway-production-2a8c.up.railway.app/api/users/register';
+const API_URL_LOGIN = 'https://railway-production-2a8c.up.railway.app/api/users/login';
+const API_URL_SOS = 'https://railway-production-2a8c.up.railway.app/api/sos/sos';
 
 
 
@@ -71,7 +71,7 @@ export const loginConserje = async (credenciales) => {
 };
 
 export const getBanosDelEdificio = async (edificioId) => {
-  const urlBanos = `http://192.168.0.190:5000/api/banos/edificios/${edificioId}/banos`;
+  const urlBanos = `https://railway-production-2a8c.up.railway.app/api/banos/edificios/${edificioId}/banos`;
   try {
     const response = await axios.get(urlBanos);
     return response.data;

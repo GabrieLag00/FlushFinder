@@ -7,7 +7,7 @@ import { stylesDashboard } from './DashboardScreen';
 import NavBar from '../../components/NavBar';
 import {getSOS, borrarSOS, borrarTodosSOS} from '../../api';
 
-const socket = io("http://192.168.100.18:8765");
+const socket = io("https://railway-production-2a8c.up.railway.app");
 
 const jabonFilled = require('./images/jabon-filled.png');
 const jabonEmpty = require('./images/jabon.png');
@@ -71,7 +71,7 @@ function DashboardSos({ navigation }) {
 
   const setupSocket = () => {
     if (!socketRef.current) {
-      socketRef.current = io("http://192.168.100.18:8765");
+      socketRef.current = io("https://railway-production-2a8c.up.railway.app");
     }
     socketRef.current.on('reporte-sos-nuevo', (newReport) => {
       console.log("Nuevo SOS recibido:", newReport);

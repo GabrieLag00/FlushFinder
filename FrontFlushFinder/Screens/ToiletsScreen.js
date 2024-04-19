@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, FlatList, Modal, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, FlatList, Modal, Dimensions, Alert } from 'react-native';
 import { stylesLogin } from './LoginScreen';
 import { stylesUbication } from './UbicationScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import { getBanosDelEdificio } from '../api';
 import { Icon } from 'react-native-elements';
 import io from 'socket.io-client';
 
-const socket = io("http://192.168.1.70:8765");
+const socket = io("https://railway-production-2a8c.up.railway.app");
 
 const { width, height } = Dimensions.get('window');
 const isLargeScreen = width > 600;
@@ -98,6 +98,28 @@ function Banos({ navigation, route }) {
             setSelectedBano(banos[prevIndex]);
         }
     };
+
+
+    useEffect(() => {
+        const handleMaintenance = (edificioId, status) => {
+            if (edificioId === route.params.edificioId && status === 'no disponible') {
+                Alert.alert(
+                    "Mantenimiento",
+                    "El edificio ha sido puesto en mantenimiento.",
+                    [{ text: "OK", onPress: () => navigation.goBack() }]
+                );
+            }
+        };
+    
+        socket.on('edificio-deshabilitado', (data) => {
+            handleMaintenance(data.edificioId, 'no disponible');
+        });
+    
+        return () => {
+            socket.off('edificio-deshabilitado');
+        };
+    }, []);
+    
 
     useEffect(() => {
         socket.on('Exit/30', data => {

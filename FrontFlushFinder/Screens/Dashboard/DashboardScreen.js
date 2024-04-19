@@ -7,7 +7,7 @@ import NavBar, { stylesNavBar } from '../../components/NavBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import io from 'socket.io-client';
 
-const SOCKET_SERVER_URL = 'http://192.168.1.70:8765';
+const SOCKET_SERVER_URL = 'https://railway-production-2a8c.up.railway.app';
 
 const DashboardScreen = ({ navigation }) => {
   const [distanceData, setDistanceData] = useState([]);

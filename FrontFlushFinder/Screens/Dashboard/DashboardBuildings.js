@@ -13,7 +13,7 @@ import { io } from 'socket.io-client';
 import { Icon } from 'react-native-elements';
 import { stylesToilets } from '../ToiletsScreen';
 
-const socket = io("http://192.168.0.190:8765");
+const socket = io("https://railway-production-2a8c.up.railway.app");
 
 
 function DashboardBuildings({ navigation }) {

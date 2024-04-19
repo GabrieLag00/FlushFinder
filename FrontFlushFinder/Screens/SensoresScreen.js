@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList } from 'react-native';
 import io from 'socket.io-client';
 import { date } from 'zod';
 
-const SOCKET_SERVER_URL = 'http://localhost:8765'; // Asegúrate de que esta dirección sea accesible desde tu dispositivo
+const SOCKET_SERVER_URL = 'http://192.168.100.18:8765'; // Asegúrate de que esta dirección sea accesible desde tu dispositivo
 
 const DistanceTableScreen = () => {
   const [distanceData, setDistanceData] = useState([]);

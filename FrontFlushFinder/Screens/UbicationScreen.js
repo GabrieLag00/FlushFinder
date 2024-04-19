@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 const { width } = Dimensions.get('window');
 const isLargeScreen = width > 600;
 
-const socket = io("http://192.168.0.190:8765");
+const socket = io("https://railway-production-2a8c.up.railway.app");
 
 function Ubicacion({ navigation }) {
   const [edificios, setEdificios] = useState([]);
@@ -24,7 +24,6 @@ function Ubicacion({ navigation }) {
     };
 
     cargarEdificios();
-    // Escuchar eventos de disponibilidad de edificios
     socket.on('edificio-deshabilitado', ({ edificioId }) => {
       updateEdificioDisponibilidad(edificioId, 'no disponible');
     });
@@ -40,23 +39,18 @@ function Ubicacion({ navigation }) {
   }, []);
 
   const updateEdificioDisponibilidad = (edificioId, disponibilidad) => {
-    const updatedEdificios = edificios.map(edificio => {
-      if (edificio.EdificioID === edificioId) {
-        return { ...edificio, Disponibilidad: disponibilidad };
-      }
-      return edificio;
-    });
-    setEdificios(updatedEdificios);
+    setEdificios(edificios => edificios.map(edificio =>
+      edificio.EdificioID === edificioId ? { ...edificio, Disponibilidad: disponibilidad } : edificio
+    ));
   };
 
   const handleSelectEdificio = (edificio) => {
     if (edificio.Disponibilidad === 'no disponible') {
-      Alert.alert("Acceso Denegado", `El baño de este edificio (${edificio.Nombre}) está en mantenimiento. Por favor, busca otro baño.`);
+      Alert.alert("Acceso Denegado", `El edificio ${edificio.Nombre} está en mantenimiento. Por favor, selecciona otro.`);
     } else {
       navigation.navigate('Toilets', { edificioId: edificio.EdificioID });
     }
   };
-
   const images = [
     require('../images/ut/ut a.jpg'),
     require('../images/ut/ut b.jpg'),

@@ -11,7 +11,7 @@ import { Icon } from 'react-native-elements';
 const { width } = Dimensions.get('window');
 const isLargeScreen = width > 600;
 
-const socket = io("http://192.168.100.18:8765");
+const socket = io("https://railway-production-2a8c.up.railway.app");
 
 
 function SosScreen({ navigation, route }) {

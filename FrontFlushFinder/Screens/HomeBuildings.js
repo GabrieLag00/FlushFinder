@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import {getEdificios} from '../api'
 import io from 'socket.io-client';
 
-const socket = io("http://192.168.100.65:8765");
+const socket = io("");
 
 
 function HomeBuildings({ navigation }) {
@@ -30,9 +30,10 @@ function HomeBuildings({ navigation }) {
   }, []);
 
   //el use effect para actualizar la disponibilidad
+
   useEffect(() => {
-    //actualizar
     const handleUpdate = (edificioId, disponibilidad) => {
+      console.log(`Actualizando edificio ${edificioId} a ${disponibilidad}`); // Debugging de actualización
       setEdificios(currentEdificios => currentEdificios.map(edificio => {
         if (edificio.EdificioID === edificioId) {
           return { ...edificio, Disponibilidad: disponibilidad };
@@ -40,9 +41,16 @@ function HomeBuildings({ navigation }) {
         return edificio;
       }));
     };
-  //la  accion de actualizar  en socket
-    socket.on('edificio-deshabilitado', ({ edificioId }) => handleUpdate(edificioId, 'no disponible'));
-    socket.on('edificio-habilitado', ({ edificioId }) => handleUpdate(edificioId, 'disponible'));
+
+    socket.on('edificio-deshabilitado', ({ edificioId }) => {
+      console.log(`Evento deshabilitado recibido para edificio ${edificioId}`); // Debugging de eventos de socket
+      handleUpdate(edificioId, 'no disponible');
+    });
+
+    socket.on('edificio-habilitado', ({ edificioId }) => {
+      console.log(`Evento habilitado recibido para edificio ${edificioId}`);
+      handleUpdate(edificioId, 'disponible');
+    });
   
     return () => {
       socket.off('edificio-deshabilitado');
@@ -50,8 +58,10 @@ function HomeBuildings({ navigation }) {
     };
   }, []);
 
+
   //sleccionar un edificio y que el modal  se muestre
   const selectEdificio = (edificio) => {
+    console.log(`Edificio seleccionado: ${edificio.Nombre}`); // Debugging de selección de edificio
     setSelectedEdificio(edificio);
     setModalVisible(true);
   };
@@ -59,7 +69,7 @@ function HomeBuildings({ navigation }) {
   //el modal  sleccionado y  que emitir el evento socket de disponibilidad
   const handleMaintenanceSelection = (selection) => {
     if (selectedEdificio) {
-      console.log(`Poner ${selectedEdificio.Nombre} en mantenimiento: ${selection}`);
+      console.log(`Poner ${selectedEdificio.Nombre} en mantenimiento: ${selection}`); // Debugging de acción de mantenimiento
       socket.emit('deshabilitar-edificio', { 
         edificioId: selectedEdificio.EdificioID,
         mantenimiento: selection
@@ -70,10 +80,10 @@ function HomeBuildings({ navigation }) {
   //la funcion para volverlo a habilitar
   const handleReenable = () => {
     if (selectedEdificio && selectedEdificio.EdificioID) {
+      console.log(`Rehabilitar edificio ${selectedEdificio.EdificioID}`); // Debugging de rehabilitación
       socket.emit('habilitar-edificio', { edificioId: selectedEdificio.EdificioID });
     }
   };
-
   const images = [
     require('../images/ut/ut a.jpg'),
     require('../images/ut/ut b.jpg'),
