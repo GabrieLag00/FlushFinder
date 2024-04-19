@@ -61,10 +61,10 @@ function DashboardScreen({ navigation }) {
               <Text style={[stylesToilets.bathStatusText]}>Baño 1: {bano1}</Text>
               <Text style={[stylesToilets.bathTitle, {textAlign:'left', marginBottom:10, color:'#3451C6'}]}>Datos Baño2</Text>
               <Text style={[stylesToilets.bathStatusText]}>Baño 2: {bano2}</Text>
-              <Text style={[stylesToilets.bathTitle, {textAlign:'left', marginBottom:10, color:'#3451C6'}]}>Datos del Papel</Text>
-              <Text style={[stylesToilets.bathStatusText]}>Papel Higiénico: {papel}%</Text>
               <Text style={[stylesToilets.bathTitle, {textAlign:'left', marginBottom:10, color:'#3451C6'}]}>Datos del Jabón</Text>
-              <Text style={[stylesToilets.bathStatusText]}>Jabón: {jabon}%</Text>
+              <Text style={[stylesToilets.bathStatusText]}>Jabón: {papel}%</Text>
+              <Text style={[stylesToilets.bathTitle, {textAlign:'left', marginBottom:10, color:'#3451C6'}]}>Datos del Papel</Text>
+              <Text style={[stylesToilets.bathStatusText]}>Papel higiénico: {jabon}%</Text>
             </View>
             {/*<TouchableOpacity style={stylesDashboard.button}>
                 <Text style={stylesDashboard.buttonText}>Learn More</Text>
