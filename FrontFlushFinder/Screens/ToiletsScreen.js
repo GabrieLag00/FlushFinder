@@ -15,47 +15,58 @@ const { width, height } = Dimensions.get('window');
 const isLargeScreen = width > 600;
 
 function Banos({ navigation, route }) {
+    const [filtroSeleccionado, setFiltroSeleccionado] = useState('');
     const menuOptions = [
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={stylesToilets.buttonBathText}>Disponible</Text>
-            <View style={stylesLogin.viewSpace} />
-            <Icon
-                name='check-circle'
-                color='#FEFEFE'
-            />
-        </View>,
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={stylesToilets.buttonBathText}>Ocupado</Text>
-            <View style={stylesLogin.viewSpace} />
-            <Icon
-                name='cancel'
-                color='#FEFEFE'
-            />
-        </View>,
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text style={stylesToilets.buttonBathText}>Mantenimiento</Text>
-        <View style={stylesLogin.viewSpace} />
-        <Icon
-            name='build'
-            color='#FEFEFE'
-        />
-    </View>,
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text style={stylesToilets.buttonBathText}>Jabón</Text>
-        <View style={stylesLogin.viewSpace} />
-        <Icon
-            name='soap'
-            color='#FEFEFE'
-        />
-    </View>,
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text style={stylesToilets.buttonBathText}>Papel</Text>
-        <View style={stylesLogin.viewSpace} />
-        <Icon
-            name='note'
-            color='#FEFEFE'
-        />
-    </View>,
+        <TouchableOpacity onPress={() => setFiltroSeleccionado('Disponible')}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={stylesToilets.buttonBathText}>Disponible</Text>
+                <View style={stylesLogin.viewSpace} />
+                <Icon
+                    name='check-circle'
+                    color='#FEFEFE'
+                />
+            </View>
+        </TouchableOpacity>,
+        <TouchableOpacity onPress={() => setFiltroSeleccionado('Ocupado')}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={stylesToilets.buttonBathText}>Ocupado</Text>
+                <View style={stylesLogin.viewSpace} />
+                <Icon
+                    name='cancel'
+                    color='#FEFEFE'
+                />
+            </View>
+        </TouchableOpacity>,
+        <TouchableOpacity onPress={() => setFiltroSeleccionado('Jabon')}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={stylesToilets.buttonBathText}>Jabón</Text>
+                <View style={stylesLogin.viewSpace} />
+                <Icon
+                    name='soap'
+                    color='#FEFEFE'
+                />
+            </View>
+        </TouchableOpacity>,
+        <TouchableOpacity onPress={() => setFiltroSeleccionado('Papel')}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={stylesToilets.buttonBathText}>Papel</Text>
+                <View style={stylesLogin.viewSpace} />
+                <Icon
+                    name='note'
+                    color='#FEFEFE'
+                />
+            </View>
+        </TouchableOpacity>,
+        <TouchableOpacity onPress={() => setFiltroSeleccionado(null)}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={stylesToilets.buttonBathText}>Todos</Text>
+                <View style={stylesLogin.viewSpace} />
+                <Icon
+                    name='density-small'
+                    color='#FEFEFE'
+                />
+            </View>
+        </TouchableOpacity>,
     ];
 
     const { edificioId } = route.params;
@@ -90,19 +101,19 @@ function Banos({ navigation, route }) {
 
     useEffect(() => {
         socket.on('Exit/30', data => {
-          setPapelPercent(data);
+            setPapelPercent(data);
         });
         socket.on('Exit/40', data => {
-          setJabonPercent(data);
+            setJabonPercent(data);
         });
         socket.on('Exit/10', setBanoH);
         socket.on('Exit/20', setBanoM);
-    
+
         return () => {
-          socket.off('Exit/30');
-          socket.off('Exit/40');
+            socket.off('Exit/30');
+            socket.off('Exit/40');
         };
-      }, []);
+    }, []);
 
     useEffect(() => {
         if (banos.length > 0 && selectedIndex >= 0 && selectedIndex < banos.length) {
@@ -127,9 +138,9 @@ function Banos({ navigation, route }) {
             socket.off('Exit/10');
             socket.off('Exit/20');
         };
-      }, []);
+    }, []);
 
-      const setupSocketListeners = (gender) => {
+    const setupSocketListeners = (gender) => {
         const topic = gender === 'Hombre' ? 'Exit/10' : 'Exit/20';
         socket.on(topic, (data) => {
             setBanoStatus(data);
@@ -137,13 +148,11 @@ function Banos({ navigation, route }) {
     };
 
     const getStatusStyle = (status) => ({
-        color: status === 'Ocupado' ? '#FF0000' : '#00FF00',
-        fontWeight: 'bold',
-        fontSize: 18,
+        color: status === 'Ocupado' ? '#D67171' : '#71D6B1',
     });
 
 
-    useEffect(() => {
+    {/* useEffect(() => {
         const cargarBanos = async () => {
             try {
                 const data = await getBanosDelEdificio(edificioId);
@@ -158,7 +167,44 @@ function Banos({ navigation, route }) {
         if (userGender) {
             cargarBanos();
         }
-    }, [edificioId, userGender]);
+    }, [edificioId, userGender]); */}
+
+    useEffect(() => {
+        const cargarBanos = async () => {
+            try {
+                const data = await getBanosDelEdificio(edificioId);
+                const filteredBanos = data.filter(bano => {
+                    // Primero filtrar por género del usuario
+                    if (bano.Genero !== userGender) return false;
+                    if (!filtroSeleccionado) return true;
+
+                    // Luego filtrar por el estado seleccionado
+                    switch (filtroSeleccionado) {
+                        case 'Disponible':
+                            return bano.estado === 'Disponible';
+                        case 'Ocupado':
+                            return bano.estado === 'Ocupado';
+                        case 'Jabon':
+                            return bano.jabon === true;
+                        case 'Papel':
+                            return bano.papel === true;
+                        case 'Todos':
+                            return bano.estado === 'Todos';
+                        default:
+                            return true; // Si no hay filtro seleccionado, mostrar todos
+                    }
+                });
+                setBanos(filteredBanos);
+            } catch (error) {
+                console.error("Error al cargar los baños:", error);
+            }
+        };
+
+        if (userGender) {
+            cargarBanos();
+        }
+    }, [edificioId, userGender, filtroSeleccionado]); // Incluir userGender y filtroSeleccionado como dependencias
+
 
     {/* const options = [
         { id: 1, label: [<MaterialCommunityIcons name="check-circle" size={20} />, <View style={stylesLogin.viewSpace} />, 'Disponibles'] },
@@ -240,9 +286,9 @@ function Banos({ navigation, route }) {
                             <View style={stylesToilets.modalContent}>
                                 <Image source={require('../images/toilet.png')} style={stylesToilets.imageModal} />
                                 <Text style={stylesToilets.bathTitle}>{selectedBano.Nombre}</Text>
-                                <Text style={getStatusStyle(banoStatus)}>
-                                 {banoStatus}
-                                 </Text>
+                                <Text style={[getStatusStyle(banoStatus), stylesToilets.bathStatus]}>
+                                    {banoStatus}
+                                </Text>
 
                                 <View style={stylesToilets.bathContainer}>
                                     <Image source={require('../images/papel-higienico.png')} style={stylesToilets.bathImage} />
@@ -380,8 +426,8 @@ export const stylesToilets = StyleSheet.create({
     bathStatus: {
         fontSize: isLargeScreen ? 35 : 22,  // Ajustar el tamaño de fuente para el estado
         fontWeight: 'bold',
-        color: '#71D6B1',
-        textAlign:'center',
+        // color: '#71D6B1',
+        textAlign: 'center',
     },
     bathStatusText: {
         fontSize: 18,
