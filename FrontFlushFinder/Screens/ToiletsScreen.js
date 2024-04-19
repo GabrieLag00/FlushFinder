@@ -176,6 +176,7 @@ function Banos({ navigation, route }) {
                 const filteredBanos = data.filter(bano => {
                     // Primero filtrar por género del usuario
                     if (bano.Genero !== userGender) return false;
+                    // Mostrar todos los banos
                     if (!filtroSeleccionado) return true;
 
                     // Luego filtrar por el estado seleccionado
