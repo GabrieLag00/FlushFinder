@@ -99,7 +99,7 @@ export const stylesUbication = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexWrap: 'wrap',
-    marginBottom: 30,
+    marginBottom: 180,
     width: '100%',
     flex: 1,
     display: 'flex',

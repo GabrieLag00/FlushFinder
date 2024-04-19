@@ -53,6 +53,12 @@ export const stylesNavBar = StyleSheet.create({
     width: '100%',
     backgroundColor: '#8594CB',
     paddingVertical: 10, // Añadido un poco de padding vertical para mejor visualización
+
+    position: 'absolute',  // Posición absoluta para mantenerla fija
+    bottom: 0,             // Alineada al fondo de la pantalla
+    left: 0,               // Alineada a la izquierda
+    right: 0,              // Alineada a la derecha
+    zIndex: 1000  
   },
   containerIcons: {
     flexDirection: 'row',

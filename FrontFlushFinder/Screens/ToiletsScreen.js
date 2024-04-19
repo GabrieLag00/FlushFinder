@@ -458,6 +458,7 @@ export const stylesToilets = StyleSheet.create({
     },
     buttonBath: {
         paddingVertical: 10,
+        paddingHorizontal: 40,
         backgroundColor: '#F6C910',
         borderRadius: 4,
         alignItems: 'center',
