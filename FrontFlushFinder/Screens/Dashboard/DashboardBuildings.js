@@ -130,7 +130,7 @@ function DashboardBuildings({ navigation }) {
             <View style={stylesDashboardBuildings.modalView}>
               <Text style={stylesToilets.bathTitle}>Baños que requieren mantenimiento</Text>
 
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <Icon
                   name='man'
                   color='#8594CB'
@@ -151,16 +151,17 @@ function DashboardBuildings({ navigation }) {
                 />
               </View>
 
-              <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <TouchableOpacity style={[stylesToilets.buttonBath, { backgroundColor: '#FF0303' }]} onPress={() => setModalVisible(false)}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={stylesToilets.buttonBathText}>Cancelar</Text>
+                  <Text style={stylesToilets.closeButton}>Cerrar</Text>
                   <View style={stylesLogin.viewSpace} />
                   <Icon
-                    name='cancel'
+                    name='close'
                     color='#FEFEFE'
                   />
                 </View>
               </TouchableOpacity>
+
             </View>
           </View>
         </View>
